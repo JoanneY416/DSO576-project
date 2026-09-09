@@ -1,0 +1,6 @@
+# Keep downloaded datasets out of version control.
+data/
+downloads/
+
+# macOS metadata
+.DS_Store
