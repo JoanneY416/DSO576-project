@@ -40,46 +40,39 @@ shared repository.
 
 ## Team next steps
 
-1. **Choose the decision before choosing the technology.** Agree on one named
-   stakeholder, one decision that person must make, and the small set of metrics
-   needed to support it. Document what the dataset cannot answer, especially
-   listener counts, downloads, revenue, geography, and episode-level behavior.
-2. **Assign responsibilities.** Name an owner for the decision statement, data
-   quality checks, SQL analysis, and the eventual interface. One teammate should
-   maintain the full local database; everyone else can begin with the sample.
-3. **Create a reproducible data audit.** Write version-controlled SQL or Python
+1. **Create a reproducible data audit.** Write version-controlled SQL or Python
    that checks `id` and `url` uniqueness, empty-string and zero sentinels, timestamp
    ranges, repeated `podcastGuid` values, `duplicateOf`, and differences between
    the 40-column sample and 42-column current database. Do not commit raw data.
-4. **Prototype with the sample, validate with the full database.** Use
+2. **Prototype with the sample, validate with the full database.** Use
    `sample/podcasts_sample.csv` to develop queries and charts quickly, but calculate
    every final count, rate, ranking, and recommendation from
    `podcastindex_feeds.db`. Filter and aggregate in SQL rather than loading the
    entire database into Python memory.
-5. **Save small derived outputs.** Export only compact, reproducible aggregate
+3. **Save small derived outputs.** Export only compact, reproducible aggregate
    tables needed by the project. Record the source snapshot date, metric
    definitions, filters, row counts, and the command or script that created each
    output.
-6. **Build the simplest useful interface.** Start with SQL and Python. Add a local
+4. **Build the simplest useful interface.** Start with SQL and Python. Add a local
    Streamlit dashboard only after the metrics are validated. The app should read
    small derived tables rather than the 5.09 GB raw database.
-7. **Add cloud services only for a demonstrated need.** If the team needs a shared
+5. **Add cloud services only for a demonstrated need.** If the team needs a shared
    queryable backend, choose either Supabase/PostgreSQL or Google Cloud SQL, not
    both, and load curated tables rather than the raw dump. Use Google Cloud Storage
    only if shared storage for source snapshots is required, and Cloud Run only
    when the Streamlit app is ready to deploy.
-8. **Treat Gemini as optional.** Consider it only for a clearly testable text task,
+6. **Treat Gemini as optional.** Consider it only for a clearly testable text task,
    such as classifying descriptions. Require structured results, compare them with
    a human-labeled test set, preserve the original text, and keep AI-generated
    labels separate from publisher-provided fields.
-9. **Use safe Git practices.** Work in short branches, review changes through pull
+7. **Use safe Git practices.** Work in short branches, review changes through pull
    requests, stage named files instead of `git add .`, and check staged paths before
    every commit. Never commit `data/`, `downloads/`, credentials, API keys, or
    local environment files.
 
 ### Next team checkpoint
 
-The next meeting should end with an approved stakeholder and decision, written
-metric definitions, assigned owners, and one sample-based query or chart that can
-later be rerun against the full database. Do not select a cloud platform or add
-Gemini until those four items are complete.
+The next meeting should end with written metric definitions, a completed initial
+data audit, and one sample-based query or chart that can later be rerun against the
+full database. Do not select a cloud platform or add Gemini until those items are
+complete.
