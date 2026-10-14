@@ -1,6 +1,6 @@
 # Podcast Opportunity Explorer — One-Shot Build Prompt
 
-## Vision
+## 1. Vision
 
 **Who uses it.** An iHeartMedia content-acquisition manager who needs to find
 podcasts worth researching when the company has a gap in a content category.
@@ -50,7 +50,7 @@ catalog and shows how each screen reduces the candidate pool.
   rather than evidence of downloads, revenue, or acquisition value. The manager
   uses the results only to prioritize due diligence.
 
-## Design
+## 2. Design
 
 Build the prototype as a short, one-way pipeline. Each piece has a small public
 contract, can be built and tested in one agent session, and should fail with an
@@ -104,7 +104,7 @@ Streamlit controls and presentation
    must not prevent the prototype from starting; the page should state which
    source it is using.
 
-### Pieces and contracts
+## 3. Precise contracts
 
 **1. Source loader — `src/load_data.py`**
 
@@ -151,6 +151,45 @@ Streamlit controls and presentation
 - **Passes:** Fast regression checks and exact setup, run, and test commands.
 - **Checks alone:** Tests run without the full SQLite snapshot; the README
   explains optional full-source use separately.
+
+## 4. Data and technical design
+
+The tracked CSV is the small, repeatable development source; pandas can load it
+for the prototype and pure-data tests. The optional SQLite snapshot is the
+full-scale source: inspect its actual schema, then use SQL to filter,
+deduplicate, aggregate, and rank, returning only the page’s counts and display
+columns instead of loading 4.7M+ rows into pandas. Keep source access separate
+from pure screening logic and the Streamlit UI, cache source reads rather than
+user-specific filter results, and preserve equivalent screening rules across
+both sources. The local-path boundary also provides the seam for later cloud
+deployment without changing the business rules.
+
+## 5. Assumptions, edge cases, and data quality
+
+- A row is a crawled RSS/Atom feed, not necessarily one unique show.
+- Zero, missing, or invalid timestamps are missing; never interpret them as
+  January 1970.
+- The snapshot date is the latest valid timestamp, and the active boundary is
+  inclusive.
+- Normalize language and all category fields before filtering; blanks do not
+  match.
+- Deduplicate only nonblank GUIDs; retain blank GUIDs and disclose duplicates
+  removed.
+- Missing episode counts filter as zero but remain visibly missing; missing
+  discovery scores filter as zero only when a minimum score is enabled.
+- `popularityScore`, host, language, and categories are metadata, not evidence
+  of audience, ownership, geography, rights, value, or suitability.
+
+## 6. Build order and “done when” checks
+
+Build source inspection/loading first, then pure normalization and screening
+functions with tiny-table tests, then the sample CSV path and Streamlit page,
+then the optional SQLite path, README, and final verification. Done means the
+sample app starts without SQLite; tests cover timestamp, language, category,
+GUID, boundary, and ranking rules; displayed attrition reconciles to a sample
+result; the limitations warning is visible; and Git has no raw or generated
+large data staged. The final handoff reports changed files, commands, check
+results, and any SQLite schema differences.
 
 ## How to use this file
 
