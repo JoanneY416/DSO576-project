@@ -1,5 +1,10 @@
 # Podcast Opportunity Explorer — One-Shot Build Prompt
 
+*How to read this prompt:* **Vision** and **Design** explain the product and
+architecture. **Precise contracts** names each independently buildable piece.
+The remaining sections give the data, reliability, and completion decisions a
+coding agent needs; the paste-ready block below is the implementation request.
+
 ## 1. Vision
 
 **Who uses it.** An iHeartMedia content-acquisition manager who needs to find
@@ -154,15 +159,30 @@ Streamlit controls and presentation
 
 ## 4. Data and technical design
 
-The tracked CSV is the small, repeatable development source; pandas can load it
-for the prototype and pure-data tests. The optional SQLite snapshot is the
-full-scale source: inspect its actual schema, then use SQL to filter,
-deduplicate, aggregate, and rank, returning only the page’s counts and display
-columns instead of loading 4.7M+ rows into pandas. Keep source access separate
-from pure screening logic and the Streamlit UI, cache source reads rather than
-user-specific filter results, and preserve equivalent screening rules across
-both sources. The local-path boundary also provides the seam for later cloud
-deployment without changing the business rules.
+The dataset repository is `dataset_podcast-index/`. Its tracked
+`sample/podcasts_sample.csv` is the small, repeatable development source; pandas
+can load it for the prototype and pure-data tests. Its `download_data.py`
+downloads the optional full SQLite snapshot into its gitignored `data/` folder.
+The archive is about 1.81 GB and expands to about 5.06 GB, so the README must
+state that the sample is sufficient and the full snapshot needs about 8 GB free
+disk space. The source loader must give a clear sample-mode fallback when that
+snapshot is absent.
+
+The SQLite snapshot is the full-scale source: inspect its actual schema, then
+use Python's standard-library `sqlite3` SQL to filter, deduplicate, aggregate,
+and rank, returning only the page’s counts and display columns instead of
+loading 4.7M+ rows into pandas. Use pandas only for the small sample and pure
+screening functions. Keep a read-only SQLite connection and source metadata
+cached by source path and modification time; do not cache a user’s filter result
+in a way that can become stale. Keep source access separate from pure screening
+logic and the Streamlit UI, and preserve equivalent rules across sources.
+
+Use a small `requirements.txt` with Streamlit, pandas, and pytest; `sqlite3` is
+part of Python. The README must give these local commands after dependencies are
+installed: `streamlit run app.py` and `pytest`. For later cloud deployment,
+replace the local source adapter with a managed query service or an object-store
+snapshot cache, while retaining the same `load_data.py` contract and pure
+screening logic.
 
 ## 5. Assumptions, edge cases, and data quality
 
@@ -190,6 +210,13 @@ GUID, boundary, and ranking rules; displayed attrition reconciles to a sample
 result; the limitations warning is visible; and Git has no raw or generated
 large data staged. The final handoff reports changed files, commands, check
 results, and any SQLite schema differences.
+
+Use one tiny invented table for the pure screening tests: include two rows with
+the same nonblank GUID but different timestamps, a blank-GUID row, `en-US`,
+`en_gb`, a category only in `category8`, a zero timestamp, and equal scores and
+episode counts. The expected result must retain the newest nonblank-GUID row,
+retain the blank-GUID row, exclude the zero timestamp, normalize both English
+tags, find the eighth-category match, and resolve the tie by title then `id`.
 
 ## How to use this file
 
@@ -222,13 +249,9 @@ who has a category gap and needs a transparent queue of podcasts to research.
 The page creates an initial screening list; it must never claim to recommend,
 value, acquire, or guarantee a partnership with a podcast.
 
-Start by inspecting the repository. Treat these files as the product contract:
-
-- project_vision.md
-- data-fit.md
-- alternatives.md
-- team-project-prompts.md
-- technical.md
+Start by inspecting this repository and `dataset_podcast-index`. This prompt and
+the dataset repository are sufficient to build the app; inspect the dataset
+repository's README and data overview before using its full snapshot.
 
 ## Deliverable
 
@@ -247,6 +270,11 @@ It should also support the local full SQLite snapshot when it is present:
 
 Do not require the full database to start the sample prototype. For the SQLite
 path, filter and aggregate in SQL; do not load all 4.7M+ rows into pandas.
+The dataset repository's `download_data.py` retrieves the optional snapshot;
+its archive needs about 1.81 GB to download and about 8 GB free disk space to
+download and unpack. The README must say that the sample is enough to run the
+prototype and must provide `streamlit run app.py` and `pytest` commands after
+dependency installation.
 
 ## Product scope
 
