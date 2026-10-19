@@ -277,8 +277,3 @@ invalidation, and rebuilding after interrupted preparation as well.
 - Inspect Git status/diff for unintended teammate changes or data. Hand off changed
   files, setup/run/test commands, check results, schema differences, and remaining
   limitations. Never claim an unrun check passed.
-
-Submission note: sample profiling above has been performed; application tests,
-performance checks, and a fresh-agent build have not been established by this
-specification review. Before submitting, give only this file and the dataset repo
-to a fresh agent, record important questions/guesses, and resolve those gaps.
