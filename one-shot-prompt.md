@@ -1,199 +1,222 @@
 # Podcast Opportunity Explorer — One-Shot Build Prompt
 
-Build a runnable local Streamlit prototype from this file and the dataset
-repository alone. Inspect the existing project before editing; preserve
-unrelated teammate work. This entire Markdown file is the build request.
+Build a runnable local Streamlit prototype from this file, the dataset repository,
+and public internet. Inspect existing code; preserve unrelated teammate work.
+Choose styling and nonessential wording.
 
 ## 1. Vision and scope
 
-**User and decision.** An iHeartMedia content-acquisition manager has a content
-category gap and limited time to investigate podcasts. The tool helps decide
-which feeds to research first using publishing recency, episode history, and a
-Podcast Index discovery signal. It produces one transparent research queue;
-it does not estimate audience, acquisition value, or partnership availability.
+An iHeartMedia content-acquisition manager has a category gap and limited time to
+investigate podcasts. Help them decide which feeds to research first by comparing
+publishing recency, episode count, and a Podcast Index discovery signal. Explicit filters, attrition counts, and deterministic ordering improve on
+inconsistent manual directory searches. This stakeholder workflow is a product
+hypothesis, not validated iHeartMedia practice.
 
-**Why it helps.** Manual directory searches and unstructured suggestions make
-consistent screening difficult. Explicit filters and attrition counts show
-which feeds remain and why, while the table supports comparison of the three
-metadata measures without combining them into a commercial score.
-
-| Use case: user selects | Tool shows | Decision supported |
+| User selects | Tool shows | User decides next |
 |---|---|---|
-| Science, 90 days, at least 20 episodes | Attrition and eligible ranked feeds | Which feeds merit editorial review and external audience research |
-| Business, 30 days, a higher episode minimum | Smaller pool and stage counts | Whether to relax criteria or investigate the remaining feeds |
-| A category and an enabled minimum discovery score | Eligible feeds ordered by the rules below | Which feeds merit initial due diligence based on this limited signal |
+| Science, 90 days, at least 20 episodes | Stage counts and ranked eligible feeds | Which feeds merit editorial and external audience research |
+| Business, 30 days, a higher episode minimum | A smaller pool and where feeds were excluded | Whether to relax criteria or investigate the remaining feeds |
+| A category and an enabled discovery-score minimum | Feeds passing that additional threshold | Which feeds warrant initial investigation using this limited signal |
 
-Build only the single “Acquisition screen” page. Exclude maps, exports,
-feed-profile pages, localization tools, outreach automation, composite scores,
-and deal recommendations. Leave styling and nonessential wording to the agent.
+Build one **Acquisition screen** page. Exclude maps, exports, feed-profile pages,
+localization, outreach, composite scores, and deal recommendations.
 
 ## 2. Design principles and pieces
 
-- **One rule contract, two execution paths.** A pure pandas implementation is
-  the reference for the sample; a SQL implementation handles the full source.
-  Identical fixture tests prevent source choice from changing the rules.
-- **Filter large data where it lives.** Execute full-source normalization,
-  deduplication, filtering, counts, and ranking in SQLite so millions of rows
-  never enter pandas or Streamlit memory.
-- **Separate presentation, rules, and source access.** The UI renders results;
-  adapters manage I/O; screening implementations own transformations. This
-  lets each piece be built and checked independently.
-- **Show uncertainty.** Feed metadata supports an investigation queue, not
-  verified commercial claims. Display missing values and quality notes.
-- **Start with the sample.** A missing full database must never block startup.
+- **Separate presentation, rules, and access:** changes to widgets or storage should
+  not change screening behavior; each piece must be independently checkable.
+- **One rule contract, two executors:** pure pandas is the sample reference;
+  SQLite handles full-source preparation and queries. Shared fixtures detect drift.
+- **Prepare once, query repeatedly:** millions of raw rows stay on disk, so widget
+  interactions do not repeat normalization or GUID sorting.
+- **Show uncertainty:** preserve missing values and disclose metadata limitations,
+  because this tool supports research rather than commercial valuation.
 
 ```text
-app controls → source adapter → pandas or SQLite screening → ScreeningResult → app
-                                  same rules and output contract
+controls → source adapter → pandas / SQLite executor → ScreeningResult → UI
 ```
 
-Suggested files and public contracts (adapt names to existing code):
+Suggested modules (adapt names to existing code):
 
-| Piece | Receives | Returns / responsibility | Independent check |
-|---|---|---|---|
-| `src/contracts.py` | Plain values | Shared Settings and ScreeningResult definitions below | Structures import without Streamlit or I/O |
-| `src/load_data.py` | Source mode and paths | SourceInfo: mode, path, source identity, raw row count, schema notes, sorted available categories; reads sample or opens read-only SQLite | Missing-file fallback and actionable schema errors |
-| `src/screening.py` | Sample DataFrame, Settings, explicit UTC as-of date | ScreeningResult using pure transformations; no files, widgets, or session state | Invented-table expected results |
-| `src/sql_screening.py` | Read-only connection, Settings, same as-of date | ScreeningResult using equivalent SQL; no widgets | Same fixture inserted into temporary SQLite |
-| `app.py` | Widgets and source/results contracts | Selects execution path and renders the page; no duplicate screening logic | Sample startup and empty-state smoke check |
-| `tests/`, `README.md` | Public contracts and setup commands | Regression checks and reproducible run instructions | Works without the downloaded database |
+| Piece | Input → output / responsibility | Independent check |
+|---|---|---|
+| `src/contracts.py` | Plain values → structures below; no I/O or Streamlit | Import and settings validation |
+| `src/load_data.py` | Mode and paths → SourceInfo and sample DataFrame or owned read-only connection; inspect schema | Missing-file fallback and actionable errors |
+| `src/screening.py` | Raw sample, Settings, UTC as-of date → ScreeningResult; pure transformations | Fixed fixture |
+| `src/sql_screening.py` | Connection, Settings, same as-of date → ScreeningResult; owns SQL preparation and queries | Temporary SQLite fixture equivalence |
+| `app.py` | Controls and contracts → rendered page; no screening logic | Defaults and empty-state smoke checks |
+| `tests/`, `README.md` | Public contracts → regression checks and reproducible instructions | Setup without full database |
 
-`Settings`: normalized category, active_days (30/90/180), nonnegative integer
-min_episodes, and optional nonnegative min_score (`None` means disabled).
+Contracts:
 
-`ScreeningResult`: snapshot_date (nullable UTC timestamp), ordered stage counts,
-all ranked eligible display rows, GUID rows removed, future-timestamp rows
-excluded, and quality warnings. SourceInfo supplies source context separately.
-The two screening implementations return the same fields and meanings. Keep
-SQL-specific transformations in the SQL implementation rather than asking the
-pure pandas function to process an already screened SQL result.
+- `Settings`: normalized category; `active_days` in {30, 90, 180}; nonnegative
+  integer `min_episodes`; optional finite nonnegative `min_score` (`None` disables it).
+- `SourceInfo`: mode, resolved path, identity `(path, size_bytes, mtime_ns)`, raw row
+  count, schema notes, sorted distinct nonblank normalized categories from all raw
+  rows. Category discovery precedes GUID reduction and user filters.
+- `ScreeningResult`: nullable UTC `snapshot_date`, ordered stage counts defined in
+  §4, all ranked eligible display rows plus internal `id`, GUID rows removed,
+  raw future-timestamp row count, and deterministic quality warnings. Both
+  executors return identical fields, values, missing semantics, and ordering.
 
-## 3. Data, environment, and scale
+Share pure scalar helpers only; SQL performs its own set transformations.
+
+## 3. Data, environment, and execution
 
 Dataset repository: `https://github.com/USC-DSO-576-PS/dataset_podcast-index`.
-Clone it beside this project if absent; private-repository access requires the
-user's existing GitHub authorization. Read its README and data overview.
+Read its README and `data_overview_podcast-index.md` (§§5–6); clone beside this
+project if absent, using existing GitHub authorization. If access is denied,
+report the required access rather than inventing data.
 
-| Source | Path relative to project root | Use |
+| Source | Default path relative to project root | Execution |
 |---|---|---|
-| Default sample | `../dataset_podcast-index/sample/podcasts_sample.csv` | Tracked 6,000-row CSV; pandas development and startup path |
-| Optional full snapshot | `../dataset_podcast-index/data/podcastindex_feeds.db` | About 4.7 million feeds; SQLite execution path |
+| Sample | `../dataset_podcast-index/sample/podcasts_sample.csv` | pandas; default even if full database exists |
+| Optional full snapshot | `../dataset_podcast-index/data/podcastindex_feeds.db` | SQLite; about 4.7 million feeds |
 
-Use Python 3.11+ with Streamlit, pandas, and pytest; `sqlite3` is standard
-library. Supply dependency declarations and exact README commands, including
-`python -m pip install -r requirements.txt` (or the equivalent for an existing
-project environment), `streamlit run app.py`, and `pytest` from the project root.
-Resolve source paths against the project location rather than the working
-folder. Allow source selection via configuration or environment variables;
-default to sample even if SQLite exists. If requested SQLite is absent, fall
-back to sample with a visible message; a missing sample or incompatible schema
-must produce an actionable error.
+Use Python 3.11+, Streamlit, pandas, pytest, and standard-library `sqlite3`.
+Provide dependency declarations and these exact project-root commands in README:
 
-The dataset script `download_data.py` downloads an approximately 1.81 GB archive;
-follow the dataset README to unpack the approximately 5.06 GB database. Explain
-that about 8 GB free disk space is needed and the sample is sufficient. Do not
-download the full source automatically or modify the dataset repository.
+```sh
+python -m pip install -r requirements.txt
+streamlit run app.py
+pytest
+```
 
-Inspect SQLite table names and column types rather than assuming its schema.
-Required fields: `id`, `title`, `podcastGuid`, `newestItemPubdate`, `language`,
-`category1`–`category8`, `episodeCount`, `host`, `popularityScore`, and `explicit`.
-Validate unique numeric `id` values for deterministic tie-breaks. Actual missing
-values include empty strings and numeric zeros; checking SQL NULL alone is
-insufficient. Categories 9 and 10 are unused in the documented snapshot.
+Configure `PODCAST_SOURCE=sample|sqlite`, `PODCAST_SAMPLE_PATH`, and
+`PODCAST_SQLITE_PATH`; resolve relative paths against the project, not the working
+directory. Requested but absent SQLite falls back to sample with a visible notice.
+Missing sample, invalid mode, or incompatible schema produces an actionable error.
+Inspect SQLite tables/types and identify the table containing the required fields;
+if multiple qualify, report ambiguity. Require `id`, `title`, `podcastGuid`,
+`newestItemPubdate`, `language`, `category1`–`category8`, `episodeCount`, `host`,
+`popularityScore`, and `explicit`. Reject missing, nonintegral, duplicate, or
+out-of-signed-64-bit-range IDs after numeric parsing.
 
-Cache sample reads and source metadata by resolved path, file size, and
-modification time. Reuse read-only SQLite access only with safe connection
-ownership; never share an unsafe connection between sessions. Cache stable SQL
-preparation or use a rebuildable, gitignored normalized local SQLite cache if
-needed to avoid redoing full-source normalization and GUID sorting on every
-interaction. Key derived data by source identity, rule version, and as-of date;
-never write to the original snapshot. Cache filtered results only with all
-settings and these identity keys. Return only display columns and counts to the
-UI; do not copy the raw database into pandas. Measure and report cold preparation
-and warm filter latency on the available laptop; identify any unresolved delays.
+The full download is optional: follow the dataset README's `download_data.py` and
+unpacking instructions (about 1.81 GB compressed, 5.06 GB unpacked, 8 GB free space
+for download/unpacking, plus additional space for the derived cache). Never
+fetch it automatically or modify the dataset repository.
 
-For later cloud use, replace the local source adapter/executor with a managed
-query service or prepared object-store snapshot while preserving the settings
-and result contracts. Deployment is outside this local deliverable.
+### Data evidence and resulting choices
 
-## 4. Exact screening rules
+The overview (§§5–6) motivates the sentinel, category, language, GUID, and score
+rules in §4. Recheck its snapshot-specific claims against the selected source.
 
-A source row is a crawled RSS/Atom feed, not necessarily a unique show. Apply
-these rules in both implementations:
+A direct CSV inspection on 2026-10-18 found **6,000 rows, 40 columns, 6,000 unique
+IDs, 312 zero `newestItemPubdate` values, 145 blank languages, one blank GUID,
+and nine excess rows sharing nonblank trimmed GUIDs**. Categories 9 and 10 were
+entirely blank; language examples included `en`, `en-us`, and `en-US`.
+Sample SHA-256:
+`14629adee2a6ff127fe24f8e6edbf3c4d9f69e3ee58b60bbe7dbf9501d6883c4`.
+These are profiling counts, not screening expectations. Retaining episode/score
+zero is product policy; it does not prove a measured zero.
 
-1. **Timestamps.** Parse `newestItemPubdate` as Unix seconds in UTC. Blank,
-   missing, nonnumeric, nonpositive, or unrepresentable values are invalid.
-   Timestamps whose UTC calendar date is after the supplied as-of UTC date are
-   also invalid. Report the number of these future rows in the raw source.
-   Capture the as-of date once per evaluation; tests pass it explicitly.
-2. **Snapshot and activity.** Before deduplication or user filters,
-   `snapshot_date` is the maximum valid timestamp in the complete selected
-   source; it is an activity reference, not a verified export date. An active
-   feed has a valid timestamp in the inclusive interval
-   `[snapshot_date - active_days × 24 hours, snapshot_date]`. If none are valid,
-   return no eligible rows, zero post-load stage counts, a null snapshot date,
-   and a clear warning.
-3. **Language and categories.** Trim and lowercase language, then take the part
-   before the first `-` or `_`; English means exactly `en`. Trim and lowercase
-   all eight category fields; ignore blanks. A feed matches if any field equals
-   the selected normalized category. Build the category selector from the
-   sorted distinct nonblank categories in the complete source.
-4. **Numbers.** Parse episode counts and discovery scores numerically. Blank,
-   missing, nonnumeric, or negative values are missing; preserve stored zero.
-   Missing episode counts act as zero for the minimum screen and deduplication
-   tie-break but display as missing. Missing discovery scores act as zero only
-   for an enabled minimum-score screen; display them as missing and sort them
-   after numeric scores. Do not impose an assumed maximum discovery score.
-5. **GUID reduction.** Trim `podcastGuid`; treat null or whitespace-only values
-   as blank and otherwise compare case-sensitively. Before screening filters,
-   retain one row per nonblank GUID: latest valid timestamp first (invalid last),
-   then largest effective episode count, then smallest numeric `id`. Retain all
-   blank-GUID rows. Report raw rows minus retained rows as GUID rows removed.
-   This is a screening heuristic, not verified show deduplication: the dataset
-   overview warns that unrelated shows can share GUIDs, so this rule can remove
-   genuine opportunities. Disclose that risk in the data-quality notes.
-6. **Eligibility.** On retained rows, require valid timestamp, activity,
-   normalized English, category match, minimum episodes, and an optional
-   minimum discovery score. Threshold comparisons are inclusive.
-7. **Ranking.** Sort eligible rows by numeric `popularityScore` descending
-   (missing last), effective `episodeCount` descending, trimmed `title`
-   ascending using case-sensitive Unicode ordering, then numeric `id` ascending.
-   Use matching pandas/SQLite text collation. No composite score.
+### Storage and performance
 
-Attrition contract; compute it in the screening implementations, never the UI:
+Cache sample reads and source metadata by SourceInfo identity. For full mode,
+build a rebuildable, gitignored local SQLite cache keyed by source identity,
+rule version, and as-of date:
 
-| Display stage | Definition |
+1. Read the source in read-only mode. Normalize required fields into an on-disk
+   table using SQL and deterministic scalar functions where needed; store raw
+   diagnostics, available categories, and the pre-reduction snapshot.
+2. Materialize GUID-retained rows with a window function following §4. Store
+   distinct `(feed_id, category)` pairs to avoid duplicate matches. Index the
+   category lookup and retained language/timestamp fields for interactive queries.
+3. Publish the completed cache atomically; coordinate concurrent builders and
+   never reuse a partial cache. Open a separate owned connection per operation
+   or session, closing it afterward; do not share unsafe connections.
+4. Query counts and eligible rows from the prepared cache. Transfer only display
+   columns plus `id` and aggregate metadata to the UI. Cache results by all
+   Settings fields and the preparation key; retain no raw full-source DataFrame.
+
+Use disk-backed SQLite temporary work and show preparation progress. Target
+interactions within two seconds on the available laptop; measure cold preparation,
+warm queries, rendering, and result sizes separately. Report unresolved delays.
+All eligible rows remain available.
+
+For later cloud use, publish the prepared tables as a versioned object-store
+snapshot queried by a managed SQL service; replace the local adapter/executor
+while preserving the contracts. Cloud deployment is outside this build.
+
+## 4. Exact screening contract
+
+Apply these rules in order, using one explicitly supplied UTC as-of **date** per
+evaluation (the app captures today's UTC date once; tests pass a fixed date).
+
+1. **Parsing.** Numeric parsing consumes the entire trimmed value, including
+   scientific notation; blanks, nulls, nonnumeric values, NaN, and infinities are
+   missing. Do not use SQLite's permissive `CAST` alone. Text nulls become empty
+   strings; trim with Python Unicode whitespace semantics in both executors.
+2. **Timestamps.** Interpret `newestItemPubdate` as Unix seconds. Accept only
+   finite positive integral seconds through `253402300799` (9999-12-31 23:59:59
+   UTC); other values are invalid. Use integer seconds internally and Python
+   UTC datetime / ISO text for output, avoiding pandas nanosecond limits.
+   In-range timestamps on a calendar date after the as-of date are also invalid;
+   count these future rows in the raw source. Same-day nonmidnight times are valid.
+3. **Snapshot/activity.** Before GUID reduction or user filters, snapshot is the
+   maximum valid timestamp in the complete source. Activity is the inclusive
+   interval `[snapshot - active_days * 86400, snapshot]`. With no valid timestamps,
+   return null snapshot, no rows, zero post-load stage counts, and a warning;
+   still report GUID removals and raw diagnostics.
+4. **Language/categories.** Trim and lowercase language, then split before the
+   first `-` or `_`; English means exactly `en`. Trim and lowercase each of the
+   eight categories. Match if any equals the selected normalized category.
+5. **Episode counts/scores.** Parsed negative values are missing; preserve zero
+   and nonnegative decimals. Missing episodes act as zero for thresholds and
+   tie-breaks but display as missing. Missing scores act as zero only for an
+   enabled score threshold; display missing and rank after all numeric scores.
+   There is no assumed score maximum. All threshold comparisons are inclusive.
+6. **GUID reduction.** Trim GUIDs and compare case-sensitively. Retain every blank
+   GUID row. For each nonblank GUID retain the latest valid timestamp (invalid
+   last), then highest effective episode count, then smallest numeric ID.
+   Apply this before eligibility filters; GUID removals = raw minus retained rows.
+7. **Eligibility/ranking.** Retained rows must have a valid active timestamp,
+   English, matching category, minimum episodes, and enabled score minimum.
+   Order by score descending (missing last), effective episodes descending,
+   trimmed title ascending (null title becomes empty), then numeric ID ascending.
+   Use Unicode code-point ordering / SQLite UTF-8 BINARY collation for titles.
+
+Compute these stages in the executors, never the UI:
+
+| Stage | Count definition |
 |---|---|
-| Loaded feeds | All raw source rows, before GUID reduction; equals SourceInfo row count |
-| Valid latest-episode timestamp | Retained rows with valid timestamps |
-| Active English feeds | Previous stage inside the activity interval and normalized English |
-| Category-matching feeds | Previous stage matching any of the eight category fields |
-| Eligible feeds | Previous stage meeting episode and enabled score thresholds |
+| Loaded feeds | All raw rows; equals SourceInfo row count |
+| Valid latest-episode timestamp | GUID-retained rows with valid timestamps |
+| Active English feeds | Previous stage within activity interval and English |
+| Category-matching feeds | Previous stage matching any category field |
+| Eligible feeds | Previous stage passing episode and enabled score thresholds |
 
-Counts cannot increase; eligible count equals the number of returned table
-rows. Show GUID removals separately, not as an extra attrition stage. Future
-row counts are raw-source quality diagnostics and can overlap GUID removals.
+Counts cannot increase; eligible count equals returned row count. GUID removals
+are a separate diagnostic, not another stage. Raw future counts can overlap removals.
 
 ## 5. Starting view and presentation
 
-Controls: one category (default `science` if present, otherwise first sorted
-category); activity 30/90/180 days (default 90); nonnegative integer minimum
-episodes (default 20); optional nonnegative discovery-score minimum (disabled
-by default, initial numeric value 0). If no categories exist, disable screening
-and explain why. English is fixed for this product, not another control.
+| Control | Initial value |
+|---|---|
+| Category | `science` if available, otherwise first sorted category |
+| Activity days | 90; choices 30/90/180 |
+| Minimum episodes | 20; nonnegative integer |
+| Enable minimum discovery score | Off; numeric field starts at 0 and accepts finite nonnegative values |
 
-Show in order:
+English is fixed. If categories are absent, disable screening and explain why.
+Render the initial result without requiring extra configuration. Show, in order:
 
-1. Source mode, raw row count, and UTC activity-reference snapshot date.
-2. The five attrition stages above, plus separate data-quality notes.
-3. A ranked, sortable table: `title`, matching category, normalized language,
-   UTC latest episode date, `episodeCount`, `host`, `popularityScore`, `explicit`.
-   Retain `id` internally for checks. A single-category selection displays that
-   category once per matching row. Show all eligible rows; client sorting may
-   change the displayed order but not eligibility or counts. For no matches,
-   preserve counts and controls and show a clear empty-state message.
-4. A short explanation of snapshot-relative activity, score ordering, and the
-   following visible limitations warning:
+1. Source mode, raw count, UTC activity-reference snapshot, and any fallback notice.
+2. Five attrition counts, then quality notes: GUID removals and collision risk,
+   raw future count, invalid/missing-field summaries, and relevant schema warnings.
+   GUID reduction is a heuristic that can remove genuine opportunities when
+   unrelated shows share a GUID; it is not verified show deduplication.
+3. All eligible rows in a sortable table: `title`, matching category (selected
+   category once per row), normalized language, latest episode UTC datetime,
+   `episodeCount`, `host`, `popularityScore`, `explicit`. Keep `id` internal;
+   render missing values distinctly from zero. Client sorting changes neither
+   eligibility nor counts. For no matches, preserve controls/counts and explain
+   that the user can relax filters.
+4. Explain snapshot-relative activity and lexicographic score/episode ordering.
+   The score reflects Podcast Index API-client requests; `host` is the
+   RSS-serving domain, not proof of ownership/network; language is not geography.
+   Keep this limitation warning visible:
 
 > Each result is a podcast feed, not necessarily a unique show. Categories and
 > languages are publisher-provided metadata. popularityScore is a discovery
@@ -201,67 +224,61 @@ Show in order:
 > acquisition value. Every shortlisted feed requires audience, editorial,
 > ownership, rights, financial, and brand-safety review.
 
-Also explain that `host` is the RSS-serving domain, not proof of ownership or
-network affiliation; language does not establish creator geography. The score
-reflects requests from Podcast Index API clients, not audience measurement.
+## 6. Build order and acceptance
 
-## 6. Build order and independent acceptance checks
+Build contracts/source inspection → pure pandas rules and fixture tests → sample
+page → SQLite preparation/executor and equivalence tests → README and verification.
+Keep raw data, archives, credentials, caches, and generated large files out of Git.
 
-Build contracts and source inspection first; implement pure screening and its
-fixture tests; wire the sample page; implement SQLite screening with equivalence
-tests; finish README and verification. Keep raw data, archives, credentials, and
-large generated files out of Git.
+### Fixed fixture
 
-### Fixed fixture with expected results
-
-Use the following complete fixture in both pandas and temporary SQLite tests.
-As-of date is `2026-09-01`; settings are `science`, 30 days, 20 episodes, no score
-minimum. Dates mean midnight UTC converted to Unix seconds. All unspecified
-categories are blank; host and explicit may use constant valid values.
+Insert this same raw fixture into pandas and temporary SQLite. As-of date:
+`2026-09-01`; Settings: science, 30 days, 20 episodes, score disabled. Dates below
+mean midnight UTC converted to Unix seconds. Empty cells are actual empty strings;
+unspecified categories are blank, host is `example.org`, explicit is 0.
 
 | id | podcastGuid | title | newestItemPubdate | language | category1 | category8 | episodeCount | popularityScore |
 |---|---|---|---|---|---|---|---|---|
 | 1 | dup | Old | 2026-08-01 | en | science | | 50 | 9 |
 | 2 | dup | Alpha | 2026-09-01 | en-US | science | | 20 | 5 |
-| 3 | blank | Beta | 2026-08-02 | en_gb | | Science | 20 | 5 |
-| 4 | blank | Beta | 2026-08-15 | en | science | | 20 | 5 |
+| 3 | | Beta | 2026-08-02 | en_gb | | Science | 20 | 5 |
+| 4 | | Beta | 2026-08-15 | en | science | | 20 | 5 |
 | 5 | zero | Zero | 0 | en | science | | 20 | 5 |
 | 6 | future | Future | 2026-09-02 | en | science | | 20 | 5 |
 | 7 | french | French | 2026-08-15 | fr | science | | 20 | 5 |
 | 8 | business | Business | 2026-08-15 | en | business | | 20 | 5 |
 | 9 | short | Short | 2026-08-15 | en | science | | 19 | 5 |
 
-`blank` in this table means an actual empty string, not the literal word.
-Expected: snapshot `2026-09-01T00:00:00Z`; stage counts
-`9 → 6 → 5 → 4 → 3`; GUID removals `1`; future rows `1`; ranked ids `[2, 3, 4]`.
-Id 3 tests both the inclusive 30-day boundary and category8. Enabling minimum
-score 6 changes only the final count to zero.
+Expected snapshot: `2026-09-01T00:00:00Z`; stages: **9 → 6 → 5 → 4 → 3**;
+GUID removals: **1**; future rows: **1**; ranked IDs: **[2, 3, 4]**.
+ID 3 tests the inclusive activity boundary and category8. Enabling score minimum
+6 changes only the final count to zero.
 
-Add focused cases for whitespace normalization, missing numbers and stored zero,
-invalid/absent timestamps, all timestamps invalid, same-day nonmidnight dates,
-GUID ties by episode count then id, invalid timestamps within a GUID group, and
-score/episode ranking differences. Both implementations must agree on all
-result fields, missing-value semantics, counts, and row order. Temporary SQLite
-tests are mandatory even when the full snapshot is unavailable.
+Add focused equivalence cases for Unicode whitespace/case, repeated categories,
+missing numbers versus zero, malformed/nonfinite/decimal numbers, invalid IDs,
+invalid/absent/all-invalid timestamps, timestamp range limits and fractional
+seconds, same-day nonmidnight times, GUID ties by episodes then ID, invalid dates
+within GUID groups, and score/episode/title ranking (including non-ASCII titles).
+Compare all result fields and warnings after canonical missing-value conversion.
+Temporary SQLite tests are mandatory without the full snapshot; test cache reuse,
+invalidation, and rebuilding after interrupted preparation as well.
 
 ### Completion evidence
 
-- Run `pytest`; report outcomes, including pandas/SQLite equivalence.
-- Start the app against the sample with no full database. Exercise all three
-  activity windows, two available categories, zero episode threshold, a high
-  score threshold, and no-match behavior. Verify defaults, warning visibility,
-  and counts against an independent sample calculation.
-- Manually compare several displayed records with source timestamps,
-  categories, GUIDs, and ranking. Report measured sample responsiveness.
-- If the full snapshot is available, verify schema, run a screen, and record
-  source identity, snapshot date, settings, stage counts, and cold/warm timings.
-  If unavailable, explicitly report full-source integration/performance as
-  unverified; fixture equivalence is still required.
-- Inspect `git status` and staged changes for unintended data or teammate edits.
-- Hand off changed files, exact setup/run/test commands, check results, measured
-  limitations, and schema differences. Never claim a check passed if not run.
+- Run `pytest` and report outcomes, including executor equivalence.
+- Start the sample app without a full database. Exercise defaults, all activity
+  windows, two categories, zero minimum episodes, a high score threshold, and
+  no-match behavior. Check visible warnings and counts against an independent
+  sample calculation; compare several records to raw timestamps/categories/GUIDs
+  and expected ranking. Report measured responsiveness.
+- If a full snapshot exists, inspect its schema and record source identity,
+  snapshot, Settings, counts, cold preparation, warm query, and rendering timings.
+  Otherwise explicitly mark full-source integration/performance unverified.
+- Inspect Git status/diff for unintended teammate changes or data. Hand off changed
+  files, setup/run/test commands, check results, schema differences, and remaining
+  limitations. Never claim an unrun check passed.
 
-Before submitting this prompt, the team should give this file and the dataset
-repository to a fresh agent and record any important question or guess as a gap
-to resolve. A completed prototype or a successful fresh-agent build must not be
-claimed solely because this specification has been reviewed.
+Submission note: sample profiling above has been performed; application tests,
+performance checks, and a fresh-agent build have not been established by this
+specification review. Before submitting, give only this file and the dataset repo
+to a fresh agent, record important questions/guesses, and resolve those gaps.
