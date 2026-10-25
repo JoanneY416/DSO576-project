@@ -79,3 +79,22 @@ A filled request (from the class lottery app):
 - **Change:** Add retention percentages between funnel stages and an expandable calculation summary for each count showing its denominator, snapshot, activity interval, and normalization/deduplication assumptions. This should provide aggregate calculation context without presenting the sample count as a population estimate
 - **Priority:** medium
 - **Status:** open
+
+
+### CR-05: Add a 60-day activity window
+
+- **From:** Jiawei Xu, 2026-10-25
+- **Part:** Activity days control
+- **Evidence:** With science, at least 20 episodes, and discovery-score filtering disabled, the available windows are 30, 90, and 180 days. These yield 9, 12, and 13 eligible feeds. I wanted a 60-day choice between 30 and 90 days, but it is unavailable.
+- **Change:** Support 60 days in the control and underlying screening settings, using the same snapshot and other filters so the user receives the corresponding candidate list.
+- **Priority:** medium
+- **Status:** open
+
+### CR-06: Compare activity windows and newly included feeds
+
+- **From:** Jiawei Xu, 2026-10-25
+- **Part:** Activity-window comparison and eligible-feed results
+- **Evidence:** With identical science/20-episode/no-score-threshold settings, the app returned 9 feeds at 30 days, 12 at 90, and 13 at 180. An independent CSV count reproduced these totals and identified 3 additional feed IDs at 90 days and 1 more at 180. The current page shows one selected window at a time.
+- **Change:** Add a side-by-side comparison of eligible counts for each window and show the newly included feed titles and latest-episode dates when expanding the window, holding the other settings and source snapshot fixed. This lets managers assess the actual candidate tradeoff rather than just the total count.
+- **Priority:** medium
+- **Status:** open
