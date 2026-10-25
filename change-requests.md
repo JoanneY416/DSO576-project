@@ -62,3 +62,20 @@ A filled request (from the class lottery app):
 - **Priority:** medium
 - **Status:** open
 ```
+### CR-03: Preview discovery-score threshold impact
+
+- **From:** Fidelia Gan, 2026-10-25
+- **Part:** Minimum discovery-score filter and eligible-feed ranking
+- **Evidence:** With science, 90 active days, and at least 20 episodes, the app returned 12 feeds with the score filter disabled, 9 at a minimum score of 2, 3 at 5, and 1 at 9. The control showed no score distribution or preview of how many feeds each threshold would remove
+- **Change:** Show the discovery-score distribution for the current candidate pool and preview the remaining feed count before applying a threshold. Explain that the score is an API-request discovery signal and offer observed-value or percentile-based threshold choices instead of an unconstrained precision input alone
+- **Priority:** high
+- **Status:** open
+
+### CR-04: Add funnel retention rates and an auditable count definition
+
+- **From:** Fidelia Gan, 2026-10-25
+- **Part:** Active English feeds number in the screening funnel
+- **Evidence:** The app displayed 315 active English feeds. My independent script reproduced 315 after 9 GUID removals and 5,680 valid retained timestamps, but the manager must manually infer that 315 is 5.5% of valid retained feeds and is a sample count measured from the source snapshot rather than today
+- **Change:** Add retention percentages between funnel stages and an expandable calculation summary for each count showing its denominator, snapshot, activity interval, and normalization/deduplication assumptions. This should provide aggregate calculation context without presenting the sample count as a population estimate
+- **Priority:** medium
+- **Status:** open
