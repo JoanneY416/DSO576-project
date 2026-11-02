@@ -1,0 +1,18 @@
+[project]
+name = "podcast-opportunity-explorer"
+version = "0.1.0"
+description = "A transparent podcast-research screening tool"
+requires-python = ">=3.11"
+dependencies = [
+    "Babel>=2.16,<3",
+    "pandas>=2.2,<3",
+    "streamlit>=1.40,<2",
+]
+
+[tool.uv]
+package = false
+
+[dependency-groups]
+dev = [
+    "pytest>=8,<9",
+]

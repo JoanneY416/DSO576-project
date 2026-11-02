@@ -2,5 +2,12 @@
 data/
 downloads/
 
+# The small, versioned sample that powers the public demonstration is intentional.
+!data/
+!data/podcasts_sample.csv
+
 # macOS metadata
 .DS_Store
+
+# Python bytecode caches
+__pycache__/
