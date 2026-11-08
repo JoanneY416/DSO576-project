@@ -42,6 +42,66 @@ The 29 feeds are therefore a proxy for partnership opportunities, not proof of t
 
 **Verdict — prove.** Sophie is better off using the app to create a structured, reproducible first-pass shortlist than relying only on manual directory searches. She must not use it alone to decide which podcasts to contact or partner with. Given the available data, retaining the transparent screening rules and stated limits is preferable to inventing an unreliable guest-interview indicator; Rephonic and direct research remain the next steps for any shortlisted feed.
 
+### Sofía: Spanish-language nostalgic music and cover versions
+
+Use Podcast Opportunity Explorer to build an initial research list, then read descriptions to check for nostalgic music and cover versions. Set the episode minimum to 0 rather than excluding candidates through an unexamined default. Sonidos y Sonados deserves further investigation, but the results do not justify a partnership decision or establish that the app is more helpful than searching Spotify directly.
+
+#### 1. The person and the decision
+
+Sofía is a fictional Spanish-language music content development manager at iHeartMedia. When she identifies a need to add more programming featuring nostalgic music and cover versions to the existing Spanish-language catalog, she looks for potential podcast partners. Her decision is which shows deserve further investigation and contact. If she ultimately selects and promotes shows that do not match that theme, listeners expecting those features could be disappointed and leave. This is a risk assumed for the case, not an observed audience loss.
+
+Her name, specific role, and assignment are scenario assumptions rather than verified internal company arrangements.
+
+#### 2. Her real situation and alternatives
+
+iHeartMedia already has experience with music history content. Its My Cultura launch announcement describes El Flow as exploring reggaeton history, so this case does not assume that the company has no such programming. Another announcement describes Latino USA joining My Cultura for podcast distribution. This is an example of bringing an existing show into the network through a partnership, rather than evidence of an acquisition.
+
+- **Publisher: iHeartMedia.** [iHeartMedia To Launch New Podcast Network ‘My Cultura’ Elevating Latinx Voices and Stories](https://www.iheartmedia.com/press/iheartmedia-launch-new-podcast-network-my-cultura-elevating-latinx-voices-and-stories). Supporting excerpt: “The show takes a historical look at the rise of Reggaeton”.
+- **Publisher: iHeartMedia.** [Futuro Media’s “Latino USA” Podcast Joins iHeartMedia’s My Cultura Podcast Network](https://www.iheartmedia.com/press/futuro-medias-latino-usa-podcast-joins-iheartmedias-my-cultura-podcast-network). Supporting excerpt: “will now distribute the podcast version of the show”.
+
+Without our app, the workflow I assume for Sofía is to search Spotify for Spanish-language podcasts featuring nostalgic music and cover versions, read descriptions, and listen to episodes. This is a scenario assumption, not a verified company practice. I have not completed an efficiency comparison between these methods.
+
+Audience interest is a priority in this case: Sofía needs to know whether listeners are interested in nostalgic tracks and cover versions, rather than assuming that a music category establishes demand. Spotify's guidance recommends audience research through surveys, polls, and conversations with creators. **Publisher: Spotify for Creators.** [How to discover and reach your podcast’s target audience](https://creators.spotify.com/resources/podcast-target-audience). Supporting excerpt: “You can ask them questions about themselves, about particular episodes, and what kind of content they like”. This supports audience research as a possible follow-up method; it does not verify iHeartMedia's internal process or this candidate's audience interests.
+
+#### 3. The app in use
+
+**Public app:** [Podcast Opportunity Explorer](https://dso576-project-podcast-index.streamlit.app/).
+
+The initial settings were Category = music; Language = Spanish (es); Active within = 90 days; Minimum episodes = 20; Explicit-content preference = Any; Minimum discovery score = 0. The screenshot shows a sample of 6,000 feeds and a snapshot date of August 31, 2026. There are 23 active selected-language feeds, 2 matching the category, and 1 remaining after the episode minimum. The candidate, Sonidos y Sonados, has 944 episodes and a discovery score of 1. The discovery score is a Podcast Index discovery signal, not a measure of audience size or partnership value.
+
+![Initial screening: a minimum of 20 episodes leaves one candidate](screenshots/spanish-music-baseline.png)
+
+The 20-episode minimum was an app default I used, not Sofía’s requirement. Changing only that minimum to 0, while holding the other visible settings constant, produces 2 candidates. The additional candidate, Saint Nicholas, has 10 episodes. I chose to remove the episode minimum and review descriptions for thematic fit. I have not established whether Saint Nicholas fits the intended theme.
+
+![Comparison: a minimum of 0 episodes produces two candidates](screenshots/spanish-music-no-minimum.png)
+
+#### 4. Reading the results for her decision
+
+**Does the number measure what she cares about?** The Spanish-language and music filters support initial screening, but they do not establish that a show features nostalgic music or cover versions. I consider reading descriptions necessary.
+
+The candidate's [Spotify show page](https://open.spotify.com/show/033ilC6MaZGFF7t7MKojeo) provides a place to investigate the program. Spotify's description text could not be retrieved during this review, so I verified the following episode descriptions on the show's own website (English summaries):
+
+- **June 4, 2026 — Publisher: Sonidos y Sonados.** The [episode description on the show's website](https://sonidosysonados.com/) lists nostalgic tracks featuring Magma and Cai and original/cover pairings involving Lole y Manuel/Medina Azahara and Leonard Cohen/Enrique Morente y Lagartija Nick.
+- **October 22, 2026 — Publisher: Sonidos y Sonados.** The [episode description on the show's website](https://sonidosysonados.com/) identifies regular sections, including original/cover pairings involving Chris Kenner/Wilson Pickett and Barrabas/Herbie Mann, and nostalgic selections featuring James Brown and Cosmosoul.
+
+These descriptions support my judgment that the show repeatedly covers Sofía's intended themes and deserves further investigation. The October episode is follow-up content evidence obtained after the app's August snapshot, not information available in that snapshot. I have not listened to the episodes, so this does not establish overall quality, audience interest, or partnership value.
+
+**Who is in the rows, and who is not?** The current repository’s app.py reads podcasts_sample.csv. One row represents a crawled feed, not necessarily a unique show. The program applies valid-date, language, category, episode-count, explicit-content, and score filters. It then retains the first occurrence of repeated nonblank Podcast GUIDs; blank GUIDs remain. The music filter checks all eight category fields, so Saint Nicholas displaying education as its primary category does not by itself demonstrate a filtering error.
+
+The es language selection uses an exact match rather than automatically including every regional Spanish tag; its actual effect has not been checked. Activity is measured relative to the sample’s latest valid timestamp, not necessarily today. Feeds outside the sample, those failing the selected conditions, and those missing valid dates are absent. I have not verified that the live deployment exactly matches the current repository version.
+
+**What outside the data matters?** Sofía needs to know whether the candidate's listeners share her intended audience's interest in nostalgic music and cover versions. Episode descriptions establish thematic fit, but they do not establish listeners' interests. Spotify's audience-research guidance above describes ways to ask listeners what content they enjoy. Such feedback would be evidence to seek in further investigation, not evidence collected in this case. The app table provides no direct evidence of audience-interest fit, and I have not obtained listener feedback for either audience. The risk that mismatched programming could disappoint listeners remains a scenario assumption.
+
+**What could she wrongly conclude?** One returned candidate does not mean that the entire market contains only one relevant show. Lowering the episode minimum produces a second candidate, demonstrating that the count depends on inclusion rules. The data are also a sample. This illustrates kind 2 in handout 11.5: which rows belong. Sofía should not treat this shortlist as a reason to stop looking elsewhere.
+
+#### 5. The verdict and change request
+
+The app can provide an initial research list. Descriptions are still needed to assess thematic fit, and the screening results should not determine a partnership decision. Sonidos y Sonados is worth further investigation. I do not yet have sufficient comparative evidence to conclude that the app helps Sofía more than searching Spotify directly.
+
+My requested improvement is **CR-07: add source-provided show descriptions and show-page or listening links to Podcast Opportunity Explorer’s results**. Both the saved screenshot and the current code’s result table lack this information. Adding it would help me check candidates’ themes and would also serve users researching other topics. Expandable descriptions could preserve the existing filters and ranking. Missing information should be labeled explicitly rather than replaced with generated descriptions. Any actual time savings still need to be tested.
+
+This proposed request is identified as CR-07 in Sofía’s local case materials; it has not yet been added to the shared change-request log. The screenshot comparison and episode descriptions support the app’s initial-screening role and this improvement, rather than establishing acquisition value or complete market coverage.
+
 ### Remaining team cases — required before submission
 
 Add every other team member's completed final case here. The cases together must cover the implemented app's main users and include at least one difficult case. Each case needs a real person, a decision, sources about how that person decides, a live-app screenshot with selections visible, interpretation of the result and data limits, and a verdict.
