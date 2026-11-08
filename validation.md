@@ -26,6 +26,22 @@ With the same settings—True Crime; English (all variants); at least 20 episode
 
 The 90-day screen adds one feed to Bella's research queue, not evidence to acquire it. The app's active definition is relative to the August 31, 2026 source snapshot, not necessarily active today. Its 6,000-feed sample may omit promising feeds, and each row is a crawled feed rather than necessarily a unique show. Because the result does not show actual audience, Bella waits for verified audience analytics before deciding which candidate is strongest. She is better off using the app only to create an initial queue, then following with manual catalog/search work and audience, rights, and ownership review.
 
+### Sophie: wellness-brand podcast outreach
+
+Sophie Chen is an influencer-partnerships manager at a PR agency representing a wellness brand that plans an early-2027 launch. She must decide which health and wellness podcasts to research for a possible guest appearance by the brand's founder. A poor shortlist wastes outreach time and campaign resources on inactive shows or shows that are unsuitable for the brand's intended audience.
+
+Sophie normally researches a podcast's content, audience, format, and previous guests before pitching it, as [Curzon PR's pitching guidance](https://curzonpr.com/theprinsider/how-to-pitch-to-podcasts-a-playbook-for-pr-firms/) recommends. She could search directories such as Listen Notes and use [Rephonic's podcast-search tool](https://rephonic.com/blog/podcast-search-tool/) to investigate estimated audience, listener demographics, and prior guests. Those alternatives remain necessary: the app's feed metadata cannot establish audience fit, listener engagement, or whether a show accepts outside guests.
+
+In the live app, Sophie selected Health; English (all variants); active within 90 days; at least 20 episodes; any explicit-content preference; and a minimum discovery score of 0.
+
+![Sophie's health-podcast screening result](sophie-health-screening.png)
+
+The app screened the 6,000-feed sample and reported 316 active English-language feeds, 41 matching the Health category, and 29 eligible feeds after the remaining rules. That gives Sophie a manageable initial research shortlist, but it is a count of feeds meeting metadata rules—not a count of podcasts suitable for the campaign. The app's activity window ends at the sample's August 31, 2026 snapshot, rather than today; shows outside the sample or below the episode threshold are excluded. Each row is a crawled feed, not necessarily a unique show, and repeated nonblank GUIDs are deduplicated while blank GUIDs remain.
+
+The 29 feeds are therefore a proxy for partnership opportunities, not proof of them. In particular, the discovery score is not audience size, downloads, engagement, revenue, or partnership suitability. Sophie still needs to check audience demographics and interests, guest format and availability, campaign cost, and scheduling by using external research tools, podcast websites, and direct host contact. The 6,000-row sample contains no guest metadata, episode-level descriptions, or transcripts; although 5,470 feeds have show descriptions, keyword matching would not reliably determine whether they accept guest interviews.
+
+**Verdict — prove.** Sophie is better off using the app to create a structured, reproducible first-pass shortlist than relying only on manual directory searches. She must not use it alone to decide which podcasts to contact or partner with. Given the available data, retaining the transparent screening rules and stated limits is preferable to inventing an unreliable guest-interview indicator; Rephonic and direct research remain the next steps for any shortlisted feed.
+
 ### Remaining team cases — required before submission
 
 Add every other team member's completed final case here. The cases together must cover the implemented app's main users and include at least one difficult case. Each case needs a real person, a decision, sources about how that person decides, a live-app screenshot with selections visible, interpretation of the result and data limits, and a verdict.
