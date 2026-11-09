@@ -191,17 +191,22 @@ If a future rerun differs from the live app, the team should document and resolv
 
 ## 4. Tests
 
-The current automated test suite contains one focused regression test, `test_screening_keeps_blank_guid_and_removes_repeat_guid`. It constructs a three-row example by hand: two rows share a nonblank GUID and one has a blank GUID. It verifies that the app keeps the first nonblank-GUID row, removes the repeated-GUID row, and retains the blank-GUID row. This protects a consequential property of the feed queue: a repeated identified feed should not be counted twice, while a feed without an identifier should not be discarded merely because it cannot be deduplicated safely.
+The automated suite contains 13 tests. The original regression test, `test_screening_keeps_blank_guid_and_removes_repeat_guid`, constructs a three-row example by hand: two rows share a nonblank GUID and one has a blank GUID. It verifies that the app keeps the first nonblank-GUID row, removes the repeated-GUID row, and retains the blank-GUID row. This protects a consequential property of the feed queue: a repeated identified feed should not be counted twice, while a feed without an identifier should not be discarded merely because it cannot be deduplicated safely.
 
-The team ran the suite on November 6, 2026 with:
+`test_mvp_validation.py` adds coverage for the activity-window boundary, missing episode dates, a category match in `category8`, language selection including English variants, episode and discovery-score boundaries, explicit-content filtering, missing and malformed numeric values during loading, and the empty-result screen. `validate_current_mvp.py` independently recalculates the funnel counts and ordered results for 10 settings directly from the CSV, including the Bella, Sophie, and Sofía screens. `check_standalone.py` verifies that the app runs from the bundled repository files.
+
+The team ran the verification on November 8, 2026 with:
 
 ```text
 cd DSO576-project
-uv run pytest
+uv sync --locked
+uv run python validate_current_mvp.py
+uv run pytest -q test_app.py test_mvp_validation.py
+uv run python check_standalone.py
 ```
 
-Result: `1 passed in 1.85s`.
+Results: dependency installation succeeded; the independent calculations matched the app for all 10 settings; the regression suite reported `13 passed`; and the local Streamlit health and root requests returned HTTP 200. Detailed commands, outputs, and limits are recorded in `mvp-verification.md` and `validation-check-results.json`. These checks validate the bundled application and selected calculation rules, but do not establish public-deployment parity, browser behavior in every environment, source-data accuracy, or the validity of the cases' business judgments.
 
 ### Tests still needed before submission
 
-The current test is not yet enough to claim broad protection. Add and run tests for the activity-window boundary, zero/missing episode timestamps, English-variant matching, category matching outside `category1`, minimum episode and discovery-score boundaries, and an empty-result screen. Replace this subsection with the actual added tests and their results before exporting `validation.pdf`.
+The current test suite provides focused coverage, but does not yet establish broad protection. Before final submission, add and run tests for public-deployment parity, browser behavior across supported environments, source-data/schema changes, and any newly implemented change requests. Record the actual added tests and their results before exporting `validation.pdf`.
