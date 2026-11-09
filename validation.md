@@ -98,9 +98,9 @@ The es language selection uses an exact match rather than automatically includin
 
 The app can provide an initial research list. Descriptions are still needed to assess thematic fit, and the screening results should not determine a partnership decision. Sonidos y Sonados is worth further investigation. I do not yet have sufficient comparative evidence to conclude that the app helps Sofía more than searching Spotify directly.
 
-My requested improvement is **CR-07: add source-provided show descriptions and show-page or listening links to Podcast Opportunity Explorer’s results**. Both the saved screenshot and the current code’s result table lack this information. Adding it would help me check candidates’ themes and would also serve users researching other topics. Expandable descriptions could preserve the existing filters and ranking. Missing information should be labeled explicitly rather than replaced with generated descriptions. Any actual time savings still need to be tested.
+My requested improvement is **CR-08: add source-provided show descriptions and show-page or listening links to Podcast Opportunity Explorer’s results**. Both the saved screenshot and the current code’s result table lack this information. Adding it would help me check candidates’ themes and would also serve users researching other topics. Expandable descriptions could preserve the existing filters and ranking. Missing information should be labeled explicitly rather than replaced with generated descriptions. Any actual time savings still need to be tested.
 
-This proposed request is identified as CR-07 in Sofía’s local case materials; it has not yet been added to the shared change-request log. The screenshot comparison and episode descriptions support the app’s initial-screening role and this improvement, rather than establishing acquisition value or complete market coverage.
+This proposed request is recorded as **CR-08** in the shared change-request log. The screenshot comparison and episode descriptions support the app’s initial-screening role and this improvement, rather than establishing acquisition value or complete market coverage.
 
 ### Remaining team cases — required before submission
 

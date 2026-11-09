@@ -108,3 +108,12 @@ A filled request (from the class lottery app):
 - **Acceptance check:** The same 4 feeds remain eligible under these settings, with their matching category fields visible. Apply this explanation to every category without changing the screening rules.
 - **Priority:** medium
 - **Status:** open
+
+### CR-08: Show source-provided descriptions and links for eligible feeds
+
+- **From:** Jiawei Xu, 2026-11-08
+- **Part:** Eligible-feed results table
+- **Evidence:** In the Spanish-language music screen, the results table identifies candidate feeds but does not show the source-provided show description or a show-page/listening link. I had to research the returned candidate outside the app to assess whether it covered nostalgic music and cover versions.
+- **Change:** Show each feed's source-provided description and an available show-page or listening link in the results, using expandable descriptions if needed. Label missing values explicitly and do not generate replacement descriptions.
+- **Priority:** medium
+- **Status:** open
