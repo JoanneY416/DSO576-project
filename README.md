@@ -14,7 +14,7 @@ The team tested the link in an incognito browser window. Before submitting, test
 
 ## Demo video
 
-**To add before submission:** replace this sentence with the team's public, unlisted demo-video link and test it in an incognito browser window.
+<https://www.youtube.com/watch?v=ZsCTqS07-Hw>
 
 ## Data
 
