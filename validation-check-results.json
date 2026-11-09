@@ -1,0 +1,195 @@
+{
+  "source_sha256": "14629adee2a6ff127fe24f8e6edbf3c4d9f69e3ee58b60bbe7dbf9501d6883c4",
+  "app_sha256": "9f52b410dd4d12bddd38044bac62bb878fca9f41d247b930eb567cb5b3264a60",
+  "rows": 6000,
+  "columns": 40,
+  "snapshot": "2026-08-31T23:21:02+00:00",
+  "cases": [
+    {
+      "case": "sofia-baseline",
+      "counts": [
+        6000,
+        23,
+        2,
+        1,
+        1,
+        1
+      ],
+      "titles": [
+        "Sonidos y Sonados"
+      ],
+      "status": "PASS"
+    },
+    {
+      "case": "sofia-no-minimum",
+      "counts": [
+        6000,
+        23,
+        2,
+        2,
+        2,
+        2
+      ],
+      "titles": [
+        "Sonidos y Sonados",
+        "Saint Nicholas"
+      ],
+      "status": "PASS"
+    },
+    {
+      "case": "sophie-health",
+      "counts": [
+        6000,
+        316,
+        41,
+        29,
+        29,
+        29
+      ],
+      "titles": [
+        "Two Onc Docs",
+        "The TriDoc Podcast, triathlon and health in one place",
+        "The Discover Strength Podcast",
+        "Staying Up with Cammie and Taryn",
+        "Me and We",
+        "She is Enough Podcast- Latina Empowerment, Healing, Growth Mindset, Faith",
+        "The Champion Within: Build Confidence, Elevate Performance, and Hit Your Goals",
+        "All Clear - A Firefighter Health & Wellness Podcast",
+        "The Incredible Journey",
+        "The Good Listening To Show: Stories of Distinction & Genius",
+        "Beyond the Prophy®",
+        "Knotty Bi Nature",
+        "The Mystic In Training Podcast",
+        "پادکست فاصله",
+        "Say YES Movement Podcast",
+        "Captains & Coaches Podcast",
+        "Just a Couple of Dentists",
+        "Take a Pause with Menopalz",
+        "Freedom Camp Podcast",
+        "HVACDen.com Audio Blogs Podcast",
+        "Train Like A Girl",
+        "Tadbit with Tadd : Just a Tadbit Smarter",
+        "Game Plan",
+        "AjaDuo Update Podcast- Diabetes News & Clinical Updates",
+        "PURPOSED",
+        "Your Daily Dose of Good",
+        "Beyond Dollars & Sense",
+        "Her Healing Season",
+        "The Better With Age Podcast"
+      ],
+      "status": "PASS"
+    },
+    {
+      "case": "english-default",
+      "counts": [
+        6000,
+        316,
+        5,
+        4,
+        4,
+        4
+      ],
+      "titles": [
+        "The FOX True Crime Podcast",
+        "Bedtime Scare-Tales by Prime.net",
+        "Gone in a Blink",
+        "KAMEOFV REDDITS"
+      ],
+      "status": "PASS"
+    },
+    {
+      "case": "english-30-days",
+      "counts": [
+        6000,
+        242,
+        4,
+        3,
+        3,
+        3
+      ],
+      "titles": [
+        "The FOX True Crime Podcast",
+        "Bedtime Scare-Tales by Prime.net",
+        "Gone in a Blink"
+      ],
+      "status": "PASS"
+    },
+    {
+      "case": "english-60-days",
+      "counts": [
+        6000,
+        288,
+        5,
+        4,
+        4,
+        4
+      ],
+      "titles": [
+        "The FOX True Crime Podcast",
+        "Bedtime Scare-Tales by Prime.net",
+        "Gone in a Blink",
+        "KAMEOFV REDDITS"
+      ],
+      "status": "PASS"
+    },
+    {
+      "case": "spanish-explicit",
+      "counts": [
+        6000,
+        23,
+        2,
+        1,
+        1,
+        1
+      ],
+      "titles": [
+        "Saint Nicholas"
+      ],
+      "status": "PASS"
+    },
+    {
+      "case": "spanish-not-explicit",
+      "counts": [
+        6000,
+        23,
+        2,
+        1,
+        1,
+        1
+      ],
+      "titles": [
+        "Sonidos y Sonados"
+      ],
+      "status": "PASS"
+    },
+    {
+      "case": "spanish-score-100",
+      "counts": [
+        6000,
+        23,
+        2,
+        2,
+        0,
+        0
+      ],
+      "titles": [],
+      "status": "PASS"
+    },
+    {
+      "case": "spanish-5000-episodes",
+      "counts": [
+        6000,
+        23,
+        2,
+        0,
+        0,
+        0
+      ],
+      "titles": [],
+      "status": "PASS"
+    }
+  ],
+  "worked_fixture": "PASS",
+  "guid_input_order_sensitive": true,
+  "scope": "Current repository calculations; not live-deployment verification or browser tests."
+}
