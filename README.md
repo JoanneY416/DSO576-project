@@ -20,7 +20,7 @@ The team tested the link in an incognito browser window. Before submitting, test
 
 The live app uses `data/podcasts_sample.csv`, a 6,000-row course sample from Podcast Index rather than the full Podcast Index catalog. It therefore reports results only for feeds represented in that sample; a promising feed absent from the sample cannot appear in its queue. Each row is a crawled podcast feed, not necessarily a unique show.
 
-The app defines activity from the latest nonzero episode timestamp in the sample. A feed is active when its latest episode falls within the selected window before that snapshot date. Language and category are self-declared feed metadata, and repeated nonblank Podcast GUIDs are deduplicated. Blank GUIDs remain because they cannot be deduplicated safely.
+The sample's activity reference date is **August 31, 2026** (latest nonzero episode timestamp: **23:21:02 UTC**). The app defines activity from that timestamp, so "active within 90 days" means the 90 days before the sample reference, not the 90 days before today. A feed is active when its latest episode falls within the selected window before that snapshot date. Language and category are self-declared feed metadata, and repeated nonblank Podcast GUIDs are deduplicated. Blank GUIDs remain because they cannot be deduplicated safely.
 
 ## Run on a laptop
 
