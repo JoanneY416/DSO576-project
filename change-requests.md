@@ -98,3 +98,13 @@ A filled request (from the class lottery app):
 - **Change:** Add a side-by-side comparison of eligible counts for each window and show the newly included feed titles and latest-episode dates when expanding the window, holding the other settings and source snapshot fixed. This lets managers assess the actual candidate tradeoff rather than just the total count.
 - **Priority:** medium
 - **Status:** open
+  
+### CR-07: Show the category match for each feed
+
+- **From:** Yifei Gan, 2026-11-08
+- **Part:** Eligible-feed results table
+- **Evidence:** With true crime, English, 90 days, at least 20 episodes, and minimum discovery score 0, the app returns 4 feeds. Three have primary categories of fiction, science, and society. The app matches category fields 1–8, but does not show which field matched.
+- **Change:** Show the matched category and whether it is primary or secondary for each result.
+- **Acceptance check:** The same 4 feeds remain eligible under these settings, with their matching category fields visible. Apply this explanation to every category without changing the screening rules.
+- **Priority:** medium
+- **Status:** open
