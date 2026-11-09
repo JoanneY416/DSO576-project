@@ -1,0 +1,194 @@
+{
+  "observed_on": "2026-11-08 America/Los_Angeles",
+  "source_sha256": "14629adee2a6ff127fe24f8e6edbf3c4d9f69e3ee58b60bbe7dbf9501d6883c4",
+  "app_sha256": "9f52b410dd4d12bddd38044bac62bb878fca9f41d247b930eb567cb5b3264a60",
+  "snapshot_utc": "2026-08-31T23:21:02+00:00",
+  "cutoff_utc": "2026-06-02T23:21:02+00:00",
+  "invalid_latest_episode_rows": 312,
+  "settings": {
+    "category": "kids",
+    "language": "English (all variants)",
+    "days": 90,
+    "min_episodes": 20,
+    "min_score": 0
+  },
+  "cases": [
+    {
+      "explicit_preference": "Any",
+      "independent_counts": {
+        "loaded": 6000,
+        "active_english": 316,
+        "kids_category": 9,
+        "episode_only": 7,
+        "after_explicit": 7,
+        "after_score": 7,
+        "eligible": 7
+      },
+      "observed_live_displayed_counts": [
+        6000,
+        316,
+        9,
+        7,
+        7,
+        7
+      ],
+      "ordered_titles_match_live": true,
+      "rows": [
+        {
+          "id": "7501743",
+          "title": "The UNspecial Podcast",
+          "explicit": "0",
+          "episodeCount": "91",
+          "popularityScore": "8",
+          "podcastGuid": "bce31be1-dd78-5b59-b57b-6f8baefacedc",
+          "newestItemPubdate": "1787587200",
+          "description": "Are you a parent raising a child with special needs? Do you sometimes feel overwhelmed, isolated, or unsure where to turn for guidance and encouragement? Welcome to The Unspecial Podcast, dedicated to empowering and inspiring parents like you on your unique journey.Each week, we bring you heartfelt conversations with a diverse range of guests who offer invaluable insights and personal stories. Hear directly from individuals with special needs who share their triumphs, challenges, and perspectives on living fulfilling lives. We'll also sit down with parents who've walked similar paths, offering practical advice, emotional support, and the wisdom gained from their experiences.But that's not all. We'll connect with dedicated educators who provide strategies for navigating the school system and fostering your child's learning. Plus, we'll feature leading experts—from therapists and medical professionals to advocates and researchers—who will equip you with evidence-based information, inno"
+        },
+        {
+          "id": "5896050",
+          "title": "Dear Son,",
+          "explicit": "0",
+          "episodeCount": "218",
+          "popularityScore": "7",
+          "podcastGuid": "c732d5f6-d53f-4077-b21b-0312c3c68712",
+          "newestItemPubdate": "1788138002",
+          "description": "This is a safe space to build upon and reinforce the values of fatherhood. We'll explore the gaps between the current generation of fathers and fathers of generations past, and mature the dialogue that will close those gaps for the generations to come. Whether your passion is to be a great father or peel back the layers of why your father wasn't present in your life (physically and/or emotionally), this is for you. Let's grow through it."
+        },
+        {
+          "id": "7327829",
+          "title": "The Chop Shop Show",
+          "explicit": "1",
+          "episodeCount": "140",
+          "popularityScore": "6",
+          "podcastGuid": "b833bcd5-6182-5ad4-9f93-b2cdbe3246ad",
+          "newestItemPubdate": "1783993860",
+          "description": "\"The Chop Shop Show\" is a weekly podcast that tackles the most pressing issues facing the Tampa Bay community. From local politics and community events, to state and national news, this podcast covers it all. In addition to addressing current events, \"The Chop Shop Show\" also features segments on entertainment and sports, providing listeners with a well-rounded understanding of the happenings in and around the Tampa Bay area. Whether you're a resident of Tampa Bay or just looking to stay informed, this podcast is a must-listen."
+        },
+        {
+          "id": "1317683",
+          "title": "Schoolyard Sports with Lane Frank",
+          "explicit": "0",
+          "episodeCount": "272",
+          "popularityScore": "5",
+          "podcastGuid": "ec5f47be-f132-55eb-af65-f7d41a3479b3",
+          "newestItemPubdate": "1787439600",
+          "description": "Welcome to Schoolyard Sports with Lane Frank! Every Thursday we are going to be coming to you from wherever you listen and watch your favorite podcasts! Lane is a 16 year old Sports Encyclopedia who will be discussing all things: NFL, NBA, MLB, College Basketball, College Football & more. He will also pontificate about the players he likes or like to rag on. Teams to watch or worry about. Stats that are worth a chat & anything in the wide world of sports that catches his attention. The student has become the teacher. Subscribe to get in the game!"
+        },
+        {
+          "id": "7834294",
+          "title": "Dreamland Chronicles",
+          "explicit": "0",
+          "episodeCount": "72",
+          "popularityScore": "1",
+          "podcastGuid": "945fe65b-38cf-5d76-969d-316a296c70a1",
+          "newestItemPubdate": "1787722789",
+          "description": "Gentle bedtime stories that transport children to magical worlds filled with wonder, friendship, and quiet adventures. Each episode weaves soothing tales designed to calm busy minds and guide little ones peacefully into sleep."
+        },
+        {
+          "id": "7776636",
+          "title": "Nancy's Nook Podcast",
+          "explicit": "0",
+          "episodeCount": "36",
+          "popularityScore": "1",
+          "podcastGuid": "481a86e1-7cd7-56e3-a9a2-bcb732cb0105",
+          "newestItemPubdate": "1787241600",
+          "description": "Nancy's Nook is a podcast containing my stories about my life. Hi I'm Nancy. This podcast introduces me, Nancy, and my background, who I am and where I'm from. Stories about my childhood through adulthood, getting married and having children including my work history.  I want to create this particular podcast and future podcasts, as a way to support other women going through life with some funny stories and some tragic stories."
+        },
+        {
+          "id": "7752729",
+          "title": "Beyond Dollars & Sense",
+          "explicit": "0",
+          "episodeCount": "165",
+          "popularityScore": "0",
+          "podcastGuid": "7e218a95-1d65-592b-8f89-98facd0e6106",
+          "newestItemPubdate": "1780509600",
+          "description": "<p>Welcome to the Beyond Dollars & Sense podcast series! This series has several chapters, by some of our most talented advisors. Our podcasters share how real-life experiences, interests, and choices impact how we look at money.</p><p>How your children engage with money, why wellness and your things like your mobility matter now and later in life and the importance of your passions related to your professional and personal life can all be game changers in how you approach financial decisions. A series not just about the now, but about tomorrow. There is something for everyone in each of our unique series, Risk & Reward, Health & Wealth and Kids & Money. Enjoy!</p><p>The opinions voiced in this podcast are for general information only and are not intended to provide specific advice or recommendations for any individual. To determine which strategies or investments may be suitable for you, consult the appropriate qualified professional prior to making a decision.</p><p> Guests and their"
+        }
+      ]
+    },
+    {
+      "explicit_preference": "Not explicit only",
+      "independent_counts": {
+        "loaded": 6000,
+        "active_english": 316,
+        "kids_category": 9,
+        "episode_only": 7,
+        "after_explicit": 6,
+        "after_score": 6,
+        "eligible": 6
+      },
+      "observed_live_displayed_counts": [
+        6000,
+        316,
+        9,
+        6,
+        6,
+        6
+      ],
+      "ordered_titles_match_live": true,
+      "rows": [
+        {
+          "id": "7501743",
+          "title": "The UNspecial Podcast",
+          "explicit": "0",
+          "episodeCount": "91",
+          "popularityScore": "8",
+          "podcastGuid": "bce31be1-dd78-5b59-b57b-6f8baefacedc",
+          "newestItemPubdate": "1787587200",
+          "description": "Are you a parent raising a child with special needs? Do you sometimes feel overwhelmed, isolated, or unsure where to turn for guidance and encouragement? Welcome to The Unspecial Podcast, dedicated to empowering and inspiring parents like you on your unique journey.Each week, we bring you heartfelt conversations with a diverse range of guests who offer invaluable insights and personal stories. Hear directly from individuals with special needs who share their triumphs, challenges, and perspectives on living fulfilling lives. We'll also sit down with parents who've walked similar paths, offering practical advice, emotional support, and the wisdom gained from their experiences.But that's not all. We'll connect with dedicated educators who provide strategies for navigating the school system and fostering your child's learning. Plus, we'll feature leading experts—from therapists and medical professionals to advocates and researchers—who will equip you with evidence-based information, inno"
+        },
+        {
+          "id": "5896050",
+          "title": "Dear Son,",
+          "explicit": "0",
+          "episodeCount": "218",
+          "popularityScore": "7",
+          "podcastGuid": "c732d5f6-d53f-4077-b21b-0312c3c68712",
+          "newestItemPubdate": "1788138002",
+          "description": "This is a safe space to build upon and reinforce the values of fatherhood. We'll explore the gaps between the current generation of fathers and fathers of generations past, and mature the dialogue that will close those gaps for the generations to come. Whether your passion is to be a great father or peel back the layers of why your father wasn't present in your life (physically and/or emotionally), this is for you. Let's grow through it."
+        },
+        {
+          "id": "1317683",
+          "title": "Schoolyard Sports with Lane Frank",
+          "explicit": "0",
+          "episodeCount": "272",
+          "popularityScore": "5",
+          "podcastGuid": "ec5f47be-f132-55eb-af65-f7d41a3479b3",
+          "newestItemPubdate": "1787439600",
+          "description": "Welcome to Schoolyard Sports with Lane Frank! Every Thursday we are going to be coming to you from wherever you listen and watch your favorite podcasts! Lane is a 16 year old Sports Encyclopedia who will be discussing all things: NFL, NBA, MLB, College Basketball, College Football & more. He will also pontificate about the players he likes or like to rag on. Teams to watch or worry about. Stats that are worth a chat & anything in the wide world of sports that catches his attention. The student has become the teacher. Subscribe to get in the game!"
+        },
+        {
+          "id": "7834294",
+          "title": "Dreamland Chronicles",
+          "explicit": "0",
+          "episodeCount": "72",
+          "popularityScore": "1",
+          "podcastGuid": "945fe65b-38cf-5d76-969d-316a296c70a1",
+          "newestItemPubdate": "1787722789",
+          "description": "Gentle bedtime stories that transport children to magical worlds filled with wonder, friendship, and quiet adventures. Each episode weaves soothing tales designed to calm busy minds and guide little ones peacefully into sleep."
+        },
+        {
+          "id": "7776636",
+          "title": "Nancy's Nook Podcast",
+          "explicit": "0",
+          "episodeCount": "36",
+          "popularityScore": "1",
+          "podcastGuid": "481a86e1-7cd7-56e3-a9a2-bcb732cb0105",
+          "newestItemPubdate": "1787241600",
+          "description": "Nancy's Nook is a podcast containing my stories about my life. Hi I'm Nancy. This podcast introduces me, Nancy, and my background, who I am and where I'm from. Stories about my childhood through adulthood, getting married and having children including my work history.  I want to create this particular podcast and future podcasts, as a way to support other women going through life with some funny stories and some tragic stories."
+        },
+        {
+          "id": "7752729",
+          "title": "Beyond Dollars & Sense",
+          "explicit": "0",
+          "episodeCount": "165",
+          "popularityScore": "0",
+          "podcastGuid": "7e218a95-1d65-592b-8f89-98facd0e6106",
+          "newestItemPubdate": "1780509600",
+          "description": "<p>Welcome to the Beyond Dollars & Sense podcast series! This series has several chapters, by some of our most talented advisors. Our podcasters share how real-life experiences, interests, and choices impact how we look at money.</p><p>How your children engage with money, why wellness and your things like your mobility matter now and later in life and the importance of your passions related to your professional and personal life can all be game changers in how you approach financial decisions. A series not just about the now, but about tomorrow. There is something for everyone in each of our unique series, Risk & Reward, Health & Wealth and Kids & Money. Enjoy!</p><p>The opinions voiced in this podcast are for general information only and are not intended to provide specific advice or recommendations for any individual. To determine which strategies or investments may be suitable for you, consult the appropriate qualified professional prior to making a decision.</p><p> Guests and their"
+        }
+      ]
+    }
+  ],
+  "scope": "Independent sample calculations compared with two recorded live screens; not age-suitability validation."
+}

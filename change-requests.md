@@ -117,3 +117,23 @@ A filled request (from the class lottery app):
 - **Change:** Show each feed's source-provided description and an available show-page or listening link in the results, using expandable descriptions if needed. Label missing values explicitly and do not generate replacement descriptions.
 - **Priority:** medium
 - **Status:** open
+
+### CR-09: Separate the episode and explicit-content funnel stages
+
+- **From:** Kellen Downey, 2026-11-08
+- **Part:** Screening funnel / screen_feeds count definitions
+- **Evidence:** On the live app, kids, English (all variants), 90 days, 20 minimum episodes, and discovery score 0 returned 7 eligible feeds with Any and 6 with Not explicit only. The card labeled Meeting episode minimum also fell from 7 to 6 although the episode threshold did not change. Independent CSV calculations in check_kellen_case.py found 7 feeds after the episode rule in both cases; the explicit rule alone removed The Chop Shop Show. See kellen-case.md, kellen-case-audit.json, and the live screenshots.
+- **Change:** Preserve an episode-only count before applying the explicit preference, then show a separate count after the explicit preference. Keep the final filtering and ranking unchanged. This applies to every category and explicit preference.
+- **Acceptance check:** For this kids screen, episode-only = 7 in both runs; after explicit = 7 for Any and 6 for Not explicit only; final eligible = 7 and 6 respectively, with the same ordered feed IDs as kellen-case-audit.json. Explicit only should give episode-only = 7 and after explicit = 1. Include the cases in a regression test when implementing the change.
+- **Priority:** medium
+- **Status:** open
+
+### CR-10: Explain explicit flags at the point of selection
+
+- **From:** Kellen Downey, 2026-11-08
+- **Part:** Explicit-content preference control and result-table flag
+- **Evidence:** The six eligible kids/English/90-day/20-episode/score-0 feeds under Not explicit only include The UNspecial Podcast and Dear Son, whose bundled descriptions address parents/fatherhood. Flag 0 therefore does not establish suitability for children ages 6-9. Apple describes publisher-supplied show/episode labels, while its Kids & Family guidance distinguishes parent-focused content and intended age ranges. Sources and live screenshots are in kellen-case.md.
+- **Change:** Explain beside the filter and table that 0 means not marked explicit in the source, rather than independently reviewed or certified for children. Explain 1 and missing/unknown flags as well. Keep this explanation applicable to every category; do not infer an age rating or silently relabel unknown values.
+- **Acceptance check:** The explanation is visible at the filter/table and explicitly denies an age-suitability guarantee. Existing 7/6 eligible counts and ordered IDs remain unchanged. Missing/unknown values are described accurately and are not presented as verified clean content.
+- **Priority:** medium
+- **Status:** open
