@@ -43,6 +43,38 @@ def language_label(code: str) -> str:
         return code
 
 
+def eligible_display_table(eligible: pd.DataFrame) -> pd.DataFrame:
+    """Keep every source category field visible in the eligible-feed table."""
+    category_labels = {
+        "category1": "Primary category",
+        **{
+            f"category{i}": f"Secondary category {i - 1}"
+            for i in range(2, 9)
+        },
+    }
+    return eligible[
+        [
+            "title",
+            *CATEGORY_COLUMNS,
+            "latest_episode",
+            "episode_count",
+            "host",
+            "discovery_score",
+            "explicit",
+        ]
+    ].rename(
+        columns={
+            "title": "Title",
+            **category_labels,
+            "latest_episode": "Latest episode (UTC)",
+            "episode_count": "Episodes",
+            "host": "Host domain",
+            "discovery_score": "Discovery score",
+            "explicit": "Explicit flag",
+        }
+    )
+
+
 def screen_feeds(
     feeds: pd.DataFrame,
     category: str,
@@ -180,27 +212,7 @@ st.write(
 if eligible.empty:
     st.info("No feeds in the sample meet these settings. Try a wider activity window, a lower episode minimum, or another category.")
 else:
-    table = eligible[
-        [
-            "title",
-            "category1",
-            "latest_episode",
-            "episode_count",
-            "host",
-            "discovery_score",
-            "explicit",
-        ]
-    ].rename(
-        columns={
-            "title": "Title",
-            "category1": "Primary category",
-            "latest_episode": "Latest episode (UTC)",
-            "episode_count": "Episodes",
-            "host": "Host domain",
-            "discovery_score": "Discovery score",
-            "explicit": "Explicit flag",
-        }
-    )
+    table = eligible_display_table(eligible)
     st.dataframe(table, use_container_width=True, hide_index=True)
 
 with st.expander("Definitions and limits", expanded=True):

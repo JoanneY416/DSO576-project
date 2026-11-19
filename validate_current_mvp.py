@@ -12,12 +12,14 @@ ROOT = Path(__file__).resolve().parent
 SOURCE = ROOT / "data/podcasts_sample.csv"
 
 
-def current_functions():
+def current_functions(include_display=False):
     # Execute the actual calculation definitions without the Streamlit UI.
     tree = ast.parse((ROOT / "app.py").read_text())
     definitions = []
     for node in tree.body:
-        if isinstance(node, ast.FunctionDef) and node.name in {"load_feeds", "screen_feeds", "language_label"}:
+        if isinstance(node, ast.FunctionDef) and node.name in {
+            "load_feeds", "screen_feeds", "language_label", "eligible_display_table"
+        }:
             node.decorator_list = []
             definitions.append(node)
     from babel import Locale
@@ -25,7 +27,10 @@ def current_functions():
     scope = {"pd": pd, "Locale": Locale, "UnknownLocaleError": UnknownLocaleError,
              "CATEGORY_COLUMNS": [f"category{i}" for i in range(1, 9)]}
     exec(compile(ast.Module(body=definitions, type_ignores=[]), "app.py", "exec"), scope)
-    return scope["load_feeds"], scope["screen_feeds"]
+    functions = (scope["load_feeds"], scope["screen_feeds"])
+    if include_display:
+        return (*functions, scope["eligible_display_table"])
+    return functions
 
 
 def oracle(rows, category, language, days, minimum, explicit, score):
