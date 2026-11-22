@@ -17,10 +17,13 @@ def current_functions():
     tree = ast.parse((ROOT / "app.py").read_text())
     definitions = []
     for node in tree.body:
-        if isinstance(node, ast.FunctionDef) and node.name in {"load_feeds", "screen_feeds"}:
+        if isinstance(node, ast.FunctionDef) and node.name in {"load_feeds", "screen_feeds", "language_label"}:
             node.decorator_list = []
             definitions.append(node)
-    scope = {"pd": pd, "CATEGORY_COLUMNS": [f"category{i}" for i in range(1, 9)]}
+    from babel import Locale
+    from babel.core import UnknownLocaleError
+    scope = {"pd": pd, "Locale": Locale, "UnknownLocaleError": UnknownLocaleError,
+             "CATEGORY_COLUMNS": [f"category{i}" for i in range(1, 9)]}
     exec(compile(ast.Module(body=definitions, type_ignores=[]), "app.py", "exec"), scope)
     return scope["load_feeds"], scope["screen_feeds"]
 
