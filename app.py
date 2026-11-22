@@ -56,11 +56,15 @@ def screen_feeds(
     snapshot = feeds["latest_episode"].max()
     active_start = snapshot - pd.Timedelta(int(days_active), unit="D")
     valid_date = feeds["latest_episode"].notna()
-    language_match = (
-        feeds["language_normalized"].str.startswith("en")
-        if language == "English (all variants)"
-        else feeds["language_normalized"].eq(language)
-    )
+    if language.endswith(" (all variants)"):
+        base_tags = feeds["language_normalized"].str.replace("_", "-", regex=False).str.split("-").str[0]
+        family_codes = {
+            code for code in base_tags.unique()
+            if code and f"{language_label(code)} (all variants)" == language
+        }
+        language_match = base_tags.isin(family_codes)
+    else:
+        language_match = feeds["language_normalized"].eq(language)
     active_language = feeds.loc[
         valid_date
         & (feeds["latest_episode"] >= active_start)
@@ -127,6 +131,9 @@ categories = category_options(feeds)
 default_index = categories.index("true crime") if "true crime" in categories else 0
 language_codes = sorted(language for language in feeds["language_normalized"].unique() if language)
 language_options = {"English (all variants)": "English (all variants)"}
+for base in sorted({code.replace("_", "-").split("-")[0] for code in language_codes}):
+    label = f"{language_label(base)} (all variants)"
+    language_options[label] = label
 for code in language_codes:
     label = f"{language_label(code)} ({code})"
     language_options[label] = code
@@ -199,6 +206,7 @@ with st.expander("Definitions and limits", expanded=True):
         - **One row** is one crawled podcast feed, not necessarily one unique show.
         - **Active** means its latest nonzero episode timestamp is within the selected window before the sample's latest valid timestamp ({snapshot.date():%Y-%m-%d}), not necessarily active today.
         - **Language** and **category** are self-declared feed metadata; category is a match in category fields 1–8.
+        - **Language choices:** “all variants” includes the base language and its regional/script tags (for example, Spanish includes es, es-mx and es-es). A choice with a specific tag matches only that tag. Language tags do not establish audience location.
         - Repeated nonblank Podcast GUIDs are deduplicated by retaining the first feed; blank GUIDs remain because they cannot be reliably deduplicated.
         - The discovery score is a Podcast Index discovery signal. It is **not** audience size, downloads, revenue, ownership, rights, brand safety, or acquisition value.
         - Shortlisted feeds still require audience, rights, ownership, editorial, commercial, and brand-safety review before any partnership decision.
