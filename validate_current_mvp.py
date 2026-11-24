@@ -53,10 +53,11 @@ def oracle(rows, category, language, days, minimum, explicit, score):
             active.append(row)
     matching = [r for r in active if category in [r[f"category{i}"].strip().lower() for i in range(1, 9)]]
     episodes = [r for r in matching if number(r, "episodeCount", 0) >= minimum]
+    flagged = episodes
     if explicit != "Any":
         wanted = 1 if explicit == "Explicit only" else 0
-        episodes = [r for r in episodes if number(r, "explicit", -1) == wanted]
-    qualified = [r for r in episodes if number(r, "popularityScore", -1) >= score]
+        flagged = [r for r in episodes if number(r, "explicit", -1) == wanted]
+    qualified = [r for r in flagged if number(r, "popularityScore", -1) >= score]
     seen = set()
     eligible = []
     for row in qualified:
@@ -67,7 +68,7 @@ def oracle(rows, category, language, days, minimum, explicit, score):
             seen.add(guid)
         eligible.append(row)
     eligible.sort(key=lambda r: (-number(r, "popularityScore", -1), -number(r, "episodeCount", 0), r["title"]))
-    return [len(rows), len(active), len(matching), len(episodes), len(qualified), len(eligible)], eligible, snapshot
+    return [len(rows), len(active), len(matching), len(episodes), len(flagged), len(qualified), len(eligible)], eligible, snapshot
 
 
 def main():
@@ -113,7 +114,7 @@ def main():
         **{f"category{i}": ["music"] * 5 if i == 8 else [""] * 5 for i in range(1, 9)},
     })
     answer, counts, _ = screen(raw, "music", "es", 30, 0, "Any", 0)
-    assert list(counts.values()) == [5, 3, 3, 3, 3, 2]
+    assert list(counts.values()) == [5, 3, 3, 3, 3, 3, 2]
     assert answer["title"].tolist() == ["Boundary", "First"]
     reversed_answer, _, _ = screen(raw.iloc[::-1], "music", "es", 30, 0, "Any", 0)
     assert reversed_answer["title"].tolist() == ["Duplicate", "Boundary"]
