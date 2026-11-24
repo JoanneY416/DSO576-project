@@ -1,6 +1,10 @@
 import pandas as pd
 
-from app import screen_feeds
+from validate_current_mvp import current_functions
+
+# Importing app.py runs its UI during collection and contaminates AppTest.
+# Load the real calculation definitions without starting the Streamlit form.
+_, screen_feeds = current_functions()
 
 
 def test_screening_keeps_blank_guid_and_removes_repeat_guid() -> None:
