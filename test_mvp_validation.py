@@ -24,7 +24,7 @@ def screen(rows, language="es", episodes=0, score=0, explicit="Any"):
 def test_inclusive_boundary_category8_and_missing_date():
     result, counts, _ = screen(fixture())
     assert result.title.tolist() == ["Latest", "Boundary"]
-    assert list(counts.values()) == [4, 2, 2, 2, 2, 2]
+    assert list(counts.values()) == [4, 2, 2, 2, 2, 2, 2]
 
 
 @pytest.mark.parametrize("minimum,expected", [(10, ["Latest", "Boundary"]), (20, ["Latest"]), (21, [])])
@@ -76,3 +76,19 @@ assert not app.exception
 assert any("No feeds in the sample" in item.value for item in app.info)
 '''
     subprocess.run([sys.executable, "-c", code], check=True, cwd=ROOT, capture_output=True, text=True)
+
+
+@pytest.mark.parametrize("preference,expected_ids", [
+    ("Not explicit only", [7501743, 5896050, 1317683, 7834294, 7776636, 7752729]),
+    ("Explicit only", [7327829]),
+    ("Any", [7501743, 5896050, 7327829, 1317683, 7834294, 7776636, 7752729]),
+])
+def test_kids_episode_and_content_tiles(preference, expected_ids):
+    # Ordered IDs from Kellen's audited Kids case on the committed CSV.
+    load, screen_data = current_functions()
+    feeds = load(str(ROOT / "data/podcasts_sample.csv"))
+    eligible, counts, _ = screen_data(feeds, "kids", "English (all variants)", 90, 20, preference, 0)
+    assert counts["Meeting episode minimum"] == 7
+    assert counts["After content filter"] == len(expected_ids)
+    assert counts["Eligible feeds"] == len(expected_ids)
+    assert eligible["id"].tolist() == expected_ids
