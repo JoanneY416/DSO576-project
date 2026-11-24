@@ -76,12 +76,13 @@ def screen_feeds(
     enough_episodes = matching_category.loc[
         matching_category["episode_count"] >= min_episodes
     ].copy()
+    after_content = enough_episodes
     if explicit_preference == "Explicit only":
-        enough_episodes = enough_episodes.loc[enough_episodes["explicit"].eq(1)].copy()
+        after_content = enough_episodes.loc[enough_episodes["explicit"].eq(1)].copy()
     elif explicit_preference == "Not explicit only":
-        enough_episodes = enough_episodes.loc[enough_episodes["explicit"].eq(0)].copy()
-    score_qualified = enough_episodes.loc[
-        enough_episodes["discovery_score"] >= min_discovery_score
+        after_content = enough_episodes.loc[enough_episodes["explicit"].eq(0)].copy()
+    score_qualified = after_content.loc[
+        after_content["discovery_score"] >= min_discovery_score
     ].copy()
 
     # A nonblank GUID represents one feed for this demonstration. Keep its first
@@ -100,6 +101,7 @@ def screen_feeds(
         "Active selected-language feeds": len(active_language),
         "Matching category": len(matching_category),
         "Meeting episode minimum": len(enough_episodes),
+        "After content filter": len(after_content),
         "Meeting score minimum": len(score_qualified),
         "Eligible feeds": len(eligible),
     }
@@ -164,9 +166,10 @@ eligible, counts, snapshot = screen_feeds(
 )
 st.caption(f"Source snapshot: latest valid episode in this 6,000-feed sample, {snapshot.date():%B %-d, %Y}.")
 
-columns = st.columns(len(counts))
-for column, (label, value) in zip(columns, counts.items()):
-    column.metric(label, f"{value:,}")
+stages = list(counts.items())
+for row in (stages[:3], stages[3:]):
+    for column, (label, value) in zip(st.columns(len(row)), row):
+        column.metric(label, f"{value:,}")
 
 st.subheader("Feeds to research next")
 st.write(
