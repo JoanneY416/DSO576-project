@@ -116,7 +116,7 @@ A filled request (from the class lottery app):
 - **Evidence:** In the Spanish-language music screen, the results table identifies candidate feeds but does not show the source-provided show description or a show-page/listening link. I had to research the returned candidate outside the app to assess whether it covered nostalgic music and cover versions.
 - **Change:** Show each feed's source-provided description and an available show-page or listening link in the results, using expandable descriptions if needed. Label missing values explicitly and do not generate replacement descriptions.
 - **Priority:** medium
-- **Status:** open
+- **Status:** partially addressed — the app now lets a user select an eligible feed and read its complete source-provided description, with an explicit message when it is missing. Show-page or listening links remain open.
 
 ### CR-09: Separate the episode and explicit-content funnel stages
 

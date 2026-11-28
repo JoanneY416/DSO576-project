@@ -18,7 +18,8 @@ def current_functions(include_display=False):
     definitions = []
     for node in tree.body:
         if isinstance(node, ast.FunctionDef) and node.name in {
-            "load_feeds", "screen_feeds", "language_label", "eligible_display_table"
+            "load_feeds", "screen_feeds", "language_label", "eligible_display_table",
+            "feed_description",
         }:
             node.decorator_list = []
             definitions.append(node)
@@ -29,7 +30,7 @@ def current_functions(include_display=False):
     exec(compile(ast.Module(body=definitions, type_ignores=[]), "app.py", "exec"), scope)
     functions = (scope["load_feeds"], scope["screen_feeds"])
     if include_display:
-        return (*functions, scope["eligible_display_table"])
+        return (*functions, scope["eligible_display_table"], scope["feed_description"])
     return functions
 
 

@@ -4,7 +4,7 @@ from validate_current_mvp import current_functions
 
 # Importing app.py runs its UI during collection and contaminates AppTest.
 # Load the real calculation definitions without starting the Streamlit form.
-_, screen_feeds, eligible_display_table = current_functions(include_display=True)
+_, screen_feeds, eligible_display_table, feed_description = current_functions(include_display=True)
 
 
 def test_screening_keeps_blank_guid_and_removes_repeat_guid() -> None:
@@ -61,3 +61,14 @@ def test_eligible_display_table_shows_all_source_category_fields() -> None:
         "Explicit flag",
     ]
     assert table.loc[0, "Secondary category 2"] == "true crime"
+
+
+def test_selected_feed_shows_its_full_description() -> None:
+    feed = pd.Series(
+        {
+            "title": "Example feed",
+            "description": "A complete explanation of what this podcast is about.",
+        }
+    )
+
+    assert feed_description(feed) == "A complete explanation of what this podcast is about."

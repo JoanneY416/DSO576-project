@@ -75,6 +75,14 @@ def eligible_display_table(eligible: pd.DataFrame) -> pd.DataFrame:
     )
 
 
+def feed_description(feed: pd.Series) -> str:
+    """Return the selected feed's complete description for the research review."""
+    description = feed.get("description", "")
+    if pd.isna(description) or not str(description).strip():
+        return "No description is available for this feed."
+    return str(description).strip()
+
+
 def screen_feeds(
     feeds: pd.DataFrame,
     category: str,
@@ -214,6 +222,14 @@ if eligible.empty:
 else:
     table = eligible_display_table(eligible)
     st.dataframe(table, use_container_width=True, hide_index=True)
+    selected_feed_index = st.selectbox(
+        "Read a feed description",
+        options=eligible.index.tolist(),
+        format_func=lambda index: str(eligible.at[index, "title"]),
+    )
+    selected_feed = eligible.loc[selected_feed_index]
+    st.subheader(f"About {selected_feed['title']}")
+    st.write(feed_description(selected_feed))
 
 with st.expander("Definitions and limits", expanded=True):
     st.markdown(

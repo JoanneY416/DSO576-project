@@ -295,6 +295,24 @@ Run: `uv run python check_kellen_case.py`.
 
 ## 4. Tests
 
+### R3.1: reading a selected feed's description
+
+The result table now includes a **Read a feed description** selector. After choosing any eligible
+feed, the app shows its complete source-provided description directly below the table. This keeps
+the table readable while allowing a researcher to inspect what each result says it is about without
+leaving the app. If the source has no description, the app states that explicitly rather than
+generating one.
+
+`test_selected_feed_shows_its_full_description` provides a complete description for a selected
+feed and asserts that the app helper returns the whole text. Run it with the rest of the suite:
+
+```text
+uv run pytest -q
+```
+
+This test protects the source-description display; it does not establish that a description proves
+audience, rights, ownership, brand safety, or partnership value.
+
 The automated suite contains 13 tests. The original regression test, `test_screening_keeps_blank_guid_and_removes_repeat_guid`, constructs a three-row example by hand: two rows share a nonblank GUID and one has a blank GUID. It verifies that the app keeps the first nonblank-GUID row, removes the repeated-GUID row, and retains the blank-GUID row. This protects a consequential property of the feed queue: a repeated identified feed should not be counted twice, while a feed without an identifier should not be discarded merely because it cannot be deduplicated safely.
 
 `test_mvp_validation.py` adds coverage for the activity-window boundary, missing episode dates, a category match in `category8`, language selection including English variants, episode and discovery-score boundaries, explicit-content filtering, missing and malformed numeric values during loading, and the empty-result screen. `validate_current_mvp.py` independently recalculates the funnel counts and ordered results for 10 settings directly from the CSV, including the Bella, Sophie, and Sofía screens. `check_standalone.py` verifies that the app runs from the bundled repository files.
